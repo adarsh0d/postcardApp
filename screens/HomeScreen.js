@@ -497,7 +497,7 @@ export default HomeScreen = () => {
                     <ScrollView  horizontal={true}>
                         <ViewShot ref={printRef} style={{ backgroundColor: '#FFF' }}>
                             <ImageBackground source={foreGrounds[foregroundCount]} imageStyle={{ resizeMode: 'cover' }} ref={printRef} style={{ width: undefined, height: undefined, }}>
-                                <View style={{ margin: 30, }}>
+                                <View style={{ margin: 20, }}>
                                     <ImageBackground source={backgrounds[backgroundCount]} imageStyle={{ resizeMode: 'cover' }} style={{ width: scale(400 * 0.8), height: scale(800 * 0.8), borderRadius: 10, elevation: 5, borderColor: '#000', }}>
                                         <View style={{ flex: 1, padding: 20 }}>
                                             <View style={{ transform: [{ rotate: '90deg' }], flex: 0.5, paddingRight: 20, height: scale(height * 0.4), borderRightWidth: 1, borderRightColor: '#654321', }}>
