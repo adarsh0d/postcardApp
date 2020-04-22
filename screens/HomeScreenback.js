@@ -445,7 +445,7 @@ const backgroundUrls = [
 export default HomeScreen = () => {
 
     const [font, setFont] = useState(0);
-    const [fontSize, setFontSize] = useState(fontSizes.big);
+    const [fontSize, setFontSize] = useState(fontSizes.xbig);
     const [backgroundCount, setBackground] = useState(0);
     const [foregroundCount, setForeground] = useState(0);
     const [showStamps, setShowStamps] = useState(false);
@@ -546,12 +546,11 @@ export default HomeScreen = () => {
                         </ScrollView>
                     </ImageBackground>
                 </View > */}
-                <ScrollView>
                 <ViewShot ref={printRef} style={{ flexShrink: 1, width: '100%', height: '100%' }}>
                     <ImageBackground source={require('../assets/floral.jpg')} imageStyle={{ resizeMode: 'cover' }} ref={printRef} style={{ width: '100%', height: '100%', flexShrink: 1 }}>
                         <View style={{ flexShrink: 1, padding: 20}}>
-                            <ImageBackground source={backgrounds[backgroundCount]} imageStyle={{ resizeMode: 'cover' }} style={{ width: undefined, height: undefined, borderRadius: 10, elevation: 3, borderColor: '#000' }}>
-                                <View style={{ paddingHorizontal: 20, height: scale(595), paddingVertical: 10, flex: 1 }}>
+                            <ImageBackground source={backgrounds[backgroundCount]} imageStyle={{ resizeMode: 'cover' }} style={{ width: '100%', height: '100%', borderRadius: 10, elevation: 3, borderColor: '#000' }}>
+                                <View style={{ paddingHorizontal: 10, paddingVertical: 10, flex: 1 }}>
                                     <View style={{ transform: [{ rotate: '90deg' }], flex: 0.5, borderRightWidth: 1, borderRightColor: '#654321', paddingHorizontal: 30 }}>
                                         <Text style={[{ fontFamily: fonts[font], fontSize: fontSize, paddingVertical: 20 }]}>{frontText}</Text>
                                     </View>
@@ -575,7 +574,6 @@ export default HomeScreen = () => {
                         </View>
                     </ImageBackground>
                 </ViewShot>
-                </ScrollView>
                 <View style={{ marginTop: indent, backgroundColor: 'rgba(255, 255, 255, 0.3)', color: '#fff', flexDirection: 'row', height: indent * 2.5, padding: 5, justifyContent: 'space-between' }}>
 
                     <View style={{ flex: 1, alignSelf: 'flex-start', flexDirection: 'row', }}>
