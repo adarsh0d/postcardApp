@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { ImageBackground, Text, StyleSheet, Linking, Image, Keyboard, TextInput, ScrollView, View, PixelRatio, Dimensions } from 'react-native';
+import { ImageBackground, Text, StyleSheet,KeyboardAvoidingView, Linking, Image, Keyboard, TextInput, ScrollView, View, PixelRatio, Dimensions } from 'react-native';
 import colors from '../utils/colors';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { TouchableOpacity, FlatList } from 'react-native-gesture-handler';
@@ -22,10 +22,10 @@ const styles = StyleSheet.create({
         borderColor: '#654321',
         borderStyle: 'dotted',
         opacity: 0.6,
-        marginRight: halfVerticalIndent,
-        marginTop: verticalIndent,
-        paddingHorizontal: halfVerticalIndent / 2,
-        paddingVertical: halfVerticalIndent / 4,
+        marginRight: 5,
+        marginTop: 10,
+        height: 40,
+        width: 40,
         textAlign: 'center',
         fontSize: fontSizes.xxmedium
     },
@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
     addressBox: {
         borderBottomWidth: 1,
         borderBottomColor: '#654321',
-        marginBottom: indent / 1.9,
+        marginBottom: 10,
     }
 })
 const fonts = [
@@ -191,7 +191,7 @@ const TextAreaBlock = ({ defaultSide, fontSize = fontSizes.xxmedium, editable = 
         setHeight(size);
     }
     return (
-        <View>
+        <KeyboardAvoidingView>
             {showButtons && (
                 <View style={{
                     flexDirection: 'row',
@@ -211,7 +211,7 @@ const TextAreaBlock = ({ defaultSide, fontSize = fontSizes.xxmedium, editable = 
             )}
             {editable && (
                 <View style={{ paddingHorizontal: indent * 2.5, alignSelf: 'flex-end' }}>
-                    <Text style={{ fontFamily: 'Curiousness', opacity: 0.6 }}>Max: 250 Characters</Text>
+                    <Text style={{ fontFamily: 'Curiousness', opacity: 0.6 }}>Max: 500 Characters</Text>
                 </View>
             )}
             {side === 'front' && (
@@ -224,7 +224,7 @@ const TextAreaBlock = ({ defaultSide, fontSize = fontSizes.xxmedium, editable = 
                         onChangeText={(text) => setFrontText(text)}
                         value={frontText}
                         editable={editable}
-                        maxLength={250}
+                        maxLength={500}
                         onContentSizeChange={(e) => updateSize(e.nativeEvent.contentSize.height)}
                     />
 
@@ -240,13 +240,13 @@ const TextAreaBlock = ({ defaultSide, fontSize = fontSizes.xxmedium, editable = 
                         onChangeText={(text) => setBackText(text)}
                         value={backText}
                         editable={editable}
-                        maxLength={250}
+                        maxLength={500}
                         onContentSizeChange={(e) => updateSize(e.nativeEvent.contentSize.height)}
                     />
 
                 </View>)}
 
-        </View>
+        </KeyboardAvoidingView>
     )
 }
 const StampArea = ({ viewStamps, stampImage, showText = true }) => {
@@ -422,9 +422,7 @@ const iconsUrls = [
 ]
 
 const foreGrounds = [
-    require('../assets/fresh.jpg'),
     require('../assets/floral3.jpg'),
-    require('../assets/table.jpg'),
 ]
 
 const backgroundUrls = [
@@ -461,7 +459,7 @@ export default HomeScreen = () => {
         if (sharingAvailable) {
             const manipResult = await ImageManipulator.manipulateAsync(
                 result,
-                [{ rotate: 270 }],
+                [{ rotate: 0}],
                 { compress: 1, format: ImageManipulator.SaveFormat.PNG }
             );
             Sharing.shareAsync(manipResult.uri);
@@ -491,7 +489,7 @@ export default HomeScreen = () => {
         const { width, height } = Dimensions.get('window');
 
         return (
-            <View style={{ backgroundColor: '#fff', paddingTop: verticalIndent * 2, flex: 1, }}>
+            <View style={{ backgroundColor: '#fff', paddingTop: verticalIndent * 2, }}>
                 {/* <ViewShot ref={printRef} style={{ flexShrink: 1, width: '100%', height: '100%', alignSelf: 'flex-start' }}>
                     <ImageBackground source={foreGrounds[foregroundCount]} imageStyle={{ resizeMode: 'cover' }} ref={printRef} style={{ width: '100%', height: '100%', flexWrap: 'nowrap'}}>
                         <View style={{ flexShrink: 1, transform: [ {rotate: '90deg'}, {translateX: indent * 3.3}, {scale: 0.8}]}}>
@@ -519,34 +517,36 @@ export default HomeScreen = () => {
                         </View>
                     </ImageBackground>
                 </ViewShot> */}
-                {/* <View style={{ flex: 1 }}>
-                    <ImageBackground source={foreGrounds[foregroundCount]} imageStyle={{ resizeMode: 'cover' }} ref={printRef} style={{ width: '100%', height: '100%', flexShrink: 1 }}>
-                        <ScrollView horizontal={true} style={{ flexShrink: 1, margin: 20}}>
-                            <ImageBackground source={backgrounds[backgroundCount]} imageStyle={{ resizeMode: 'cover' }} style={{ width: height, height: width, borderRadius: 10, elevation: 5, borderColor: '#000', }}>
-                                <View style={{ flexDirection: 'row', flex: 1, width: '100%', margin: indent, alignSelf: 'flex-start', justifySelf: 'flex-start', }}>
-                                    <View style={{ flex: 1, borderRightWidth: 1, borderRightColor: '#654321', paddingHorizontal: indent }}>
-                                        <Text style={[{ fontFamily: fonts[font], fontSize: fontSize, paddingVertical: verticalIndent * 1.1 }]}>{frontText}</Text>
-                                    </View>
-                                    <View style={{ paddingHorizontal: indent * 3 }}>
-                                        <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingVertical: halfVerticalIndent, }}>
-                                            <View style={{ alignSelf: 'center' }}>
-                                                <Text style={{ fontSize: fontSizes.big, fontFamily: 'Curiousness', borderBottomWidth: 2, borderColor: '#654321' }}>POST-CARD</Text>
-                                                <Text style={{ fontSize: 2, fontFamily: 'Curiousness', borderBottomWidth: 2, borderColor: '#654321' }}></Text>
+                <ScrollView horizontal={true}>
+                    <ViewShot ref={printRef} style={{backgroundColor: '#FFF'}}>
+                            <ImageBackground source={foreGrounds[foregroundCount]} imageStyle={{ resizeMode: 'cover'}} ref={printRef} style={{ width: undefined, height: undefined, }}>
+                                <View style={{ margin: 30, }}>
+                                    <ImageBackground source={backgrounds[backgroundCount]} imageStyle={{ resizeMode: 'cover' }} style={{ width: 760, height: 380, borderRadius: 10, elevation: 5, borderColor: '#000', }}>
+                                        <View style={{ flexDirection: 'row', flex: 1, width: '100%', paddingHorizontal: 40, alignSelf: 'flex-start', justifySelf: 'flex-start', }}>
+                                            <View style={{ flex: 0.5, borderRightWidth: 1, paddingRight: 20, borderRightColor: '#654321',  }}>
+                                                <Text style={[{ fontFamily: fonts[font], fontSize: fontSize, paddingVertical: verticalIndent * 1.1 }]}>{frontText}</Text>
                                             </View>
-                                            <View>
-                                                <StampArea stampImage={stampImage} showText={false}></StampArea>
+                                            <View style={{ paddingLeft: 40, paddingTop: 30, flex: 0.5 }}>
+                                                <View style={{ flexDirection: 'row', justifyContent: 'space-between', }}>
+                                                    <View style={{ alignSelf: 'center' }}>
+                                                        <Text style={{ fontSize: 22, fontFamily: 'Curiousness', borderBottomWidth: 2, borderColor: '#654321' }}>POST-CARD</Text>
+                                                        <Text style={{ fontSize: 2, fontFamily: 'Curiousness', borderBottomWidth: 2, borderColor: '#654321' }}></Text>
+                                                    </View>
+                                                    <View>
+                                                        <StampArea stampImage={stampImage} showText={false}></StampArea>
+                                                    </View>
+                                                </View>
+                                                <View style={{ width: '100%' }}>
+                                                    <AddressBlock editable={false} address={address} setParentAddress={(val) => setAddress(val)} font={font}></AddressBlock>
+                                                </View>
                                             </View>
                                         </View>
-                                        <View style={{ width: '100%' }}>
-                                            <AddressBlock editable={false} address={address} setParentAddress={(val) => setAddress(val)} font={font}></AddressBlock>
-                                        </View>
-                                    </View>
+                                    </ImageBackground>
                                 </View>
                             </ImageBackground>
-                        </ScrollView>
-                    </ImageBackground>
-                </View > */}
-                <ScrollView>
+                    </ViewShot>
+                </ScrollView>
+                {/* <ScrollView>
                 <ViewShot ref={printRef} style={{ flexShrink: 1, width: '100%', height: '100%' }}>
                     <ImageBackground source={require('../assets/floral.jpg')} imageStyle={{ resizeMode: 'cover' }} ref={printRef} style={{ width: '100%', height: '100%', flexShrink: 1 }}>
                         <View style={{ flexShrink: 1, padding: 20}}>
@@ -575,7 +575,7 @@ export default HomeScreen = () => {
                         </View>
                     </ImageBackground>
                 </ViewShot>
-                </ScrollView>
+                </ScrollView> */}
                 <View style={{ marginTop: indent, backgroundColor: 'rgba(255, 255, 255, 0.3)', color: '#fff', flexDirection: 'row', height: indent * 2.5, padding: 5, justifyContent: 'space-between' }}>
 
                     <View style={{ flex: 1, alignSelf: 'flex-start', flexDirection: 'row', }}>
@@ -640,8 +640,8 @@ export default HomeScreen = () => {
         )
     }
     return (
-
         <ImageBackground ref={printRef} source={backgrounds[backgroundCount]} imageStyle={{ resizeMode: 'cover' }} style={{ width: '100%', height: '100%', }}>
+           <ScrollView>
             <View collapsable={false} style={{ paddingTop: indent * 2.5, flex: 1 }}>
                 {showHeader && (
                     <View style={{ flexDirection: 'row', paddingHorizontal: indent * 2.5, justifyContent: 'space-between' }}>
@@ -666,6 +666,7 @@ export default HomeScreen = () => {
 
                 }></IconsPanel>
             )}
+            </ScrollView>
             <View style={{ backgroundColor: 'rgba(255, 255, 255, 0.3)', color: '#fff', flexDirection: 'row', height: indent * 2.5, padding: 5, justifyContent: 'space-between' }}>
 
                 <View style={{ flex: 1, alignSelf: 'flex-start', flexDirection: 'row', }}>
