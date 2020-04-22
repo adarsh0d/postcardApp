@@ -423,6 +423,9 @@ const iconsUrls = [
 
 const foreGrounds = [
     require('../assets/floral3.jpg'),
+    require('../assets/floral8.jpg'),
+    require('../assets/floral.jpg'),
+    require('../assets/flower9.jpg'),
 ]
 
 const backgroundUrls = [
@@ -459,7 +462,7 @@ export default HomeScreen = () => {
         if (sharingAvailable) {
             const manipResult = await ImageManipulator.manipulateAsync(
                 result,
-                [{ rotate: 0 }],
+                [{ rotate: 270 }],
                 { compress: 1, format: ImageManipulator.SaveFormat.PNG }
             );
             Sharing.shareAsync(manipResult.uri);
@@ -491,7 +494,7 @@ export default HomeScreen = () => {
         return (
             <View style={{ backgroundColor: '#fff', flex: 1, paddingTop: verticalIndent * 2, }}>
                 <ScrollView >
-                    <ScrollView horizontal={true}>
+                    <ScrollView  horizontal={true}>
                         <ViewShot ref={printRef} style={{ backgroundColor: '#FFF' }}>
                             <ImageBackground source={foreGrounds[foregroundCount]} imageStyle={{ resizeMode: 'cover' }} ref={printRef} style={{ width: undefined, height: undefined, }}>
                                 <View style={{ margin: 30, }}>
