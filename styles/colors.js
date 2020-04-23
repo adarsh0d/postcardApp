@@ -15,7 +15,7 @@ export default {
   yellow: '#F5C94E',
   purple: '#933DA8',
   salmon: '#FC714E',
-
+  brownDarker: '#654321',
   defaultPrimary: '#8BC34A',
   textPrimary: '#FFFFFF',
   primaryText: '#212121',
