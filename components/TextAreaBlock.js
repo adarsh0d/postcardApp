@@ -3,7 +3,7 @@ import React, {useRef, useState} from 'react';
 import { Text,KeyboardAvoidingView, TextInput, View, } from 'react-native';
 import { fonts} from '../utils/consts';
 
-const TextAreaBlock = ({ defaultSide, fontSize = fontSizes.xxmedium, editable = true, font, theme, setParentFrontText: setFrontText, frontText, setParentBackText: setBackText, backText, setSideBlock, showButtons = false }) => {
+const TextAreaBlock = ({ defaultSide, fontSize = fontSizes.xxmedium, editable = true, font, theme,  setSideBlock, showButtons = false }) => {
     const [height, setHeight] = useState(50);
 
     const [side, setSide] = useState(defaultSide ? defaultSide : 'front');
@@ -11,6 +11,7 @@ const TextAreaBlock = ({ defaultSide, fontSize = fontSizes.xxmedium, editable = 
     const updateSize = (size) => {
         setHeight(size);
     }
+    const [frontText, setFrontText] = useState('');    
     return (
         <KeyboardAvoidingView>
             {showButtons && (
@@ -42,6 +43,7 @@ const TextAreaBlock = ({ defaultSide, fontSize = fontSizes.xxmedium, editable = 
                         editable={editable}
                         maxLength={500}
                         ref={textRef}
+                        value={frontText}
                         disableFullscreenUI={true}
                         onChangeText={(text) => setFrontText(text)}
                     />

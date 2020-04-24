@@ -10,7 +10,7 @@ import fontSizes from '../styles/fontSizes'
 import colors from '../styles/colors';
 import baseStyle from '../styles/baseStyle';
 
-import { fonts, foreGrounds, backgrounds} from '../utils/consts';
+import { fonts, foreGrounds, letterBackgrounds, imgBackgrounds} from '../utils/consts';
 import AddressBlock from '../components/AddressBlock';
 import TextAreaBlock from '../components/TextAreaBlock';
 import StampArea from '../components/StampsArea';
@@ -30,7 +30,7 @@ const themesStyleSheets = {
         },  
         cardRight:{
             ...baseStyle.cardRight,
-            backgroundColor: 'rgba(0,0,0,0.3)',
+            backgroundColor: 'rgba(0,0,0,0.1)',
             borderTopLeftRadius: 0,
             borderBottomLeftRadius: 0,
             padding: 10,
@@ -39,7 +39,7 @@ const themesStyleSheets = {
       
         cardLeft: {
             ...baseStyle.cardLeft,
-            backgroundColor: 'rgba(0,0,0,0.3)',
+            backgroundColor: 'rgba(0,0,0,0.1)',
             borderRightWidth: 0,
             borderTopRightRadius: 0,
             borderBottomRightRadius: 0,
@@ -52,19 +52,29 @@ const themesStyleSheets = {
         },
         textArea: {
             ...baseStyle.textArea,
-            color: colors.white
+            color: colors.white,
+            fontSize: 30
         },
         pinBox: {
             ...baseStyle.pinBox,
-            borderColor: 'rgba(255,255,255,0.3)',
+            borderColor: 'rgba(255,255,255,1)',
             borderWidth: 0,
             borderBottomWidth: 1,
             opacity: 1,
-            color: colors.white
+            color: colors.white,
+            marginRight: 0
         },
         addressBox: {
             ...baseStyle.addressBox,
-            borderBottomColor: 'rgba(255,255,255,1)'
+            borderBottomColor: 'rgba(255,255,255,1)',
+
+        },
+        addressBlock: {
+            marginHorizontal: 20,
+            marginVertical: 10,            
+            backgroundColor: 'rgba(0,0,0,0.5)',
+            borderRadius: 10,
+            padding: 20            
         },
         addressBoxInput: {
             ...baseStyle.addressBoxInput,
@@ -107,9 +117,6 @@ export default HomeScreen = () => {
     const [stampImage, setStampImage] = useState(null);
     const [showHeader, setShowHeader] = useState(true);
     const [showPrint, setShowPreview] = useState(false);
-    const [frontText, setFrontText] = useState('');
-    const [backText, setBackText] = useState('');
-    const [printInProgress, setPrintInProgress] = useState(false);
     const [imageCard, setCardType] = useState(false);
     const toggleSwitch = () => setIsEnabled(previousState => !previousState);
     const snapshot = async () => {
@@ -118,17 +125,21 @@ export default HomeScreen = () => {
         if (sharingAvailable) {
             const manipResult = await ImageManipulator.manipulateAsync(
                 result,
-                [{ rotate: 270 }],
             );
-            Sharing.shareAsync(manipResult.uri);
+            Sharing.shareAsync(result);
         }
 
     }
     const setImageCard = (val) => {        
         setCardType(val);
+        setBackground(0);
         if(val) {
+            setFontSize(60)
+            setFont(1);
             setTheme(themes[1]);
         } else {            
+            setFont(0)
+            setFontSize(30);
             setTheme(themes[0]);
         }
     }
@@ -138,17 +149,7 @@ export default HomeScreen = () => {
     const preview = () => {
         setShowPreview(true);
     }
-    const [address, setAddress] = useState({
-        addressLine1: '',
-        addressLine2: '',
-        addressLine3: '',
-        pin1: '',
-        pin2: '',
-        pin3: '',
-        pin4: '',
-        pin5: '',
-        pin6: ''
-    })
+   
     const printRef = useRef(null);
 
     const rotateFonts = () => {
@@ -159,14 +160,15 @@ export default HomeScreen = () => {
         }
     }
     const showBackgrounds = () => {
-        if (backgroundCount + 1 < backgrounds.length) {
+        const backgroundsToCheck = theme === 'light'? letterBackgrounds: imgBackgrounds;
+        if (backgroundCount + 1 < backgroundsToCheck.length) {
             setBackground(backgroundCount + 1);
         } else {
             setBackground(0);
         }
     }
     const showForegrounds = () => {
-        if (foregroundCount + 1 < foreGrounds.length) {
+        if (foregroundCount + 1 < imgBackgrounds.length) {
             setForeground(foregroundCount + 1);
         } else {
             setForeground(0);
@@ -185,24 +187,26 @@ export default HomeScreen = () => {
             <ScrollView >
                 <ScrollView horizontal={true}>
                     <ViewShot ref={printRef} style={selectedTheme.viewShot}>
-                        <ImageBackground source={foreGrounds[foregroundCount]} imageStyle={{ resizeMode: 'cover' }} ref={printRef} style={selectedTheme.foreGround}>
+                        <ImageBackground source={imgBackgrounds[foregroundCount]} imageStyle={{ resizeMode: 'cover' }} ref={printRef} style={selectedTheme.foreGround}>
                             <View style={selectedTheme.backgroundContainer}>
-                                <ImageBackground source={backgrounds[backgroundCount]} imageStyle={{ resizeMode: 'cover', borderRadius: 5 }} style={selectedTheme.backGround}>
+                                <ImageBackground source={theme === 'light'? letterBackgrounds[backgroundCount]: imgBackgrounds[backgroundCount]} imageStyle={{ resizeMode: 'cover',  }} style={selectedTheme.backGround}>
                                     <View style={selectedTheme.cardContainer}>
                                         <View style={selectedTheme.cardLeft}>
                                             {showHeader && (
-                                                <TextAreaBlock theme={selectedTheme} fontSize={fontSize} frontText={frontText} backText={backText} setParentFrontText={(val) => setFrontText(val)} setParentBackText={(val) => setBackText(val)} font={font} setSideBlock={(val) => turnSide(val)}></TextAreaBlock>
+                                                <TextAreaBlock theme={selectedTheme} fontSize={fontSize} font={font} setSideBlock={(val) => turnSide(val)}></TextAreaBlock>
                                             )}
                                         </View>
                                         <View style={selectedTheme.cardRight}>
                                             <View style={selectedTheme.cardHeader}>
                                                 <View style={selectedTheme.cardTitle}>
-                                                    <TextInput 
-                                                        disableFullscreenUI={true} 
-                                                        style={selectedTheme.cardText} 
-                                                        defaultValue="POST-CARD"
-                                                        underlineColorAndroid="transparent"
-                                                    />
+                                                    {theme === 'light' && (
+                                                        <TextInput 
+                                                            disableFullscreenUI={true} 
+                                                            style={selectedTheme.cardText} 
+                                                            defaultValue="POST-CARD"
+                                                            underlineColorAndroid="transparent"
+                                                        />
+                                                    )}
                                                     <Text style={selectedTheme.extraBorder}></Text>
                                                 </View>
                                                 <View style={selectedTheme.cardStamp}>

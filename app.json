@@ -18,6 +18,9 @@
     "androidStatusBar": {
       "hidden": true
     },
+    "androidNavigationBar": {
+      "visible": "sticky-immersive"
+    },
     "updates": {
       "fallbackToCacheTimeout": 0
     },

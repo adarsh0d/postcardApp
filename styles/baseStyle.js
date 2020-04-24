@@ -1,6 +1,7 @@
 import { Dimensions } from 'react-native';
 import { verticalIndent, indent, halfVerticalIndent } from './dimensions';
 const { width, height } = Dimensions.get('window');
+
 import fontSizes from './fontSizes'
 import colors from './colors';
 const baseStyle = {
@@ -23,13 +24,12 @@ const baseStyle = {
         height: '100%',
         color: colors.black,
         textAlignVertical: 'top',
-
+        padding: 10
     },
     pinBox: {
         borderWidth: 1,
         borderColor: colors.brownDarker,
         borderStyle: 'dotted',
-        opacity: 0.6,
         marginRight: 5,
         marginTop: 10,
         height: indent * 2,
@@ -39,7 +39,6 @@ const baseStyle = {
     },
     addressBoxInput: {
         borderStyle: 'dotted',
-        opacity: 0.6,
         fontSize: fontSizes.xxmedium,
     },
     addressBox: {
@@ -49,25 +48,27 @@ const baseStyle = {
     },
     addressBlock: {
         marginHorizontal: 20,
-        marginBottom: 10
+        marginBottom: 10,
+        
     },
     foreGround: {
-        width:  '100%',
-        height: '100%'
+        width:  width,
+        height: height,
+        
     },
     backgroundContainer: {
-        margin: 20
+        margin: 30,
     },
     backGround: {
-        height: 350,
-        width: 760,
-        borderRadius: 10,
-        elevation: 5,
+        width: '100%',
+        height: '100%',
+        elevation: 10,
     },
     cardContainer: {
         flex: 1,
         padding: 10,
-        flexDirection: 'row'
+        flexDirection: 'row',
+        flexWrap: 'wrap',
     },
     cardLeft: {
         flex: 0.5,
@@ -78,7 +79,7 @@ const baseStyle = {
     cardRight: {
         flex: 0.5,
         width: '100%',
-        paddingVertical: 20
+        paddingVertical: 20,
     },
     cardHeader: {
         flexDirection: 'row',
@@ -86,7 +87,7 @@ const baseStyle = {
         marginHorizontal: 20
     },
     cardTitle: {
-        alignSelf: 'flex-start',
+        alignSelf: 'center',
         
     },
     cardStamp: {

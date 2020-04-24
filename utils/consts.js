@@ -1,12 +1,14 @@
 
-const backgrounds = [
-    { uri: 'https://scontent-lhr8-1.xx.fbcdn.net/v/t1.0-9/93280391_10206949158764030_8864357112151539712_o.jpg?_nc_cat=111&_nc_sid=85a577&_nc_ohc=Z-MuATLmx9cAX8THFzo&_nc_ht=scontent-lhr8-1.xx&oh=869bc2842d86e5752d372bdc0598cb44&oe=5EC6BB15' },
-    require('../assets/browntexture.jpg'),
-    require('../assets/floral2.jpg'),
-    require('../assets/fresh.jpg'),
+const letterBackgrounds = [
+   require('../assets/browntexture.jpg'),
     require('../assets/floral3.jpg'),
     require('../assets/floral4.jpg'),
     require('../assets/floral5.jpg'),
+]
+const imgBackgrounds = [    {   uri: 'https://wallpapertag.com/wallpaper/full/1/a/a/432627-cool-beautiful-nature-background-2560x1600-for-ipad-pro.jpg'},
+    {uri: 'https://wallpapercave.com/wp/PhW1uB5.jpg'},
+    {uri: 'https://wallpaperaccess.com/full/672571.jpg'},
+    {uri: 'https://cdn.hipwallpaper.com/i/61/62/8o9VGz.jpg'}
 ]
 
 const iconsUrls = [
@@ -122,4 +124,4 @@ const fonts = [
     'Rembank'
 ]
 
-export { fonts, foreGrounds, iconsUrls, backgrounds}
+export { fonts, foreGrounds, iconsUrls, letterBackgrounds, imgBackgrounds}

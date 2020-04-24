@@ -1,9 +1,12 @@
 
-import React, {useRef} from 'react';
+import React, {useRef, useState} from 'react';
 import { TextInput, View, } from 'react-native';
 import { fonts} from '../utils/consts';
-const AddressBlock = ({ font, theme, setParentAddress: setAddress, address, editable = true, disableFullscreenUI = true }) => {
+const AddressBlock = ({ font, theme, editable = true, disableFullscreenUI = true }) => {
     const refs = {
+        addressLine1: useRef(null),
+        addressLine2: useRef(null),
+        addressLine3: useRef(null),
         pin1: useRef(null),
         pin2: useRef(null),
         pin3: useRef(null),
@@ -11,6 +14,17 @@ const AddressBlock = ({ font, theme, setParentAddress: setAddress, address, edit
         pin5: useRef(null),
         pin6: useRef(null)
     }
+    const [address, setAddress] = useState({
+        addressLine1: '',
+        addressLine2: '',
+        addressLine3: '',
+        pin1: '',
+        pin2: '',
+        pin3: '',
+        pin4: '',
+        pin5: '',
+        pin6: ''
+    })
     return (
         <View>
             <View style={theme.addressBox}>
@@ -20,6 +34,11 @@ const AddressBlock = ({ font, theme, setParentAddress: setAddress, address, edit
                     placeholderTextColor={theme.placeholder.color}
                     disableFullscreenUI={disableFullscreenUI}
                     editable={editable}
+                    ref={refs['addressLine1']}
+                    value={address.addressLine1}
+                    onSubmitEditing={() => {
+                        refs['addressLine2'].current.focus()
+                    }}
                     onChangeText={(text) => setAddress({ ...address, addressLine1: text })}
                 />
             </View>
@@ -29,6 +48,11 @@ const AddressBlock = ({ font, theme, setParentAddress: setAddress, address, edit
                     placeholderTextColor={theme.placeholder.color}
                     disableFullscreenUI={disableFullscreenUI}
                     editable={editable}
+                    value={address.addressLine2}
+                    ref={refs['addressLine2']}
+                    onSubmitEditing={() => {
+                        refs['addressLine3'].current.focus()
+                    }}
                     onChangeText={(text) => setAddress({ ...address, addressLine2: text })}
                 />
             </View>
@@ -38,6 +62,11 @@ const AddressBlock = ({ font, theme, setParentAddress: setAddress, address, edit
                     placeholderTextColor={theme.placeholder.color}
                     disableFullscreenUI={disableFullscreenUI}
                     editable={editable}
+                    ref={refs['addressLine3']}
+                    onSubmitEditing={() => {
+                        refs['pin1'].current.focus()
+                    }}
+                    value={address.addressLine3}
                     onChangeText={(text) => setAddress({ ...address, addressLine3: text })}
                 />
             </View>
@@ -53,6 +82,8 @@ const AddressBlock = ({ font, theme, setParentAddress: setAddress, address, edit
                     returnKeyType="next"
                     disableFullscreenUI={disableFullscreenUI}
                     editable={editable}
+                    value={address.pin1}
+                    ref={refs['pin1']}
                     onChangeText={(text) => {
                         setAddress({ ...address, pin1: text })
                         if (text) {
@@ -69,6 +100,7 @@ const AddressBlock = ({ font, theme, setParentAddress: setAddress, address, edit
                     returnKeyType="next"
                     editable={editable}
                     maxLength={1}
+                    value={address.pin2}
                     onChangeText={(text) => {
                         setAddress({ ...address, pin2: text })
                         if (text) {
@@ -87,6 +119,7 @@ const AddressBlock = ({ font, theme, setParentAddress: setAddress, address, edit
                     ref={refs['pin3']}
                     editable={editable}
                     maxLength={1}
+                    value={address.pin3}
                     onChangeText={(text) => {
                         setAddress({ ...address, pin3: text })
                         if (text) {
@@ -103,6 +136,7 @@ const AddressBlock = ({ font, theme, setParentAddress: setAddress, address, edit
                     ref={refs['pin4']}
                     editable={editable}
                     maxLength={1}
+                    value={address.pin4}
                     onChangeText={(text) => {
                         setAddress({ ...address, pin4: text })
                         if (text) {
@@ -118,6 +152,7 @@ const AddressBlock = ({ font, theme, setParentAddress: setAddress, address, edit
                     disableFullscreenUI={disableFullscreenUI}
                     ref={refs['pin5']}
                     editable={editable}
+                    value={address.pin5}
                     maxLength={1}
                     onChangeText={(text) => {
                         setAddress({ ...address, pin5: text })
@@ -133,6 +168,7 @@ const AddressBlock = ({ font, theme, setParentAddress: setAddress, address, edit
                     disableFullscreenUI={disableFullscreenUI}
                     maxLength={1}
                     ref={refs['pin6']}
+                    value={address.pin6}
                     editable={editable}
                     onChangeText={(text) => setAddress({ ...address, pin6: text })}
                 />
