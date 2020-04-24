@@ -18,6 +18,7 @@ const IconsPanel = ({ setStampImage, theme }) => {
             <FlatList horizontal={true}
                 data={iconsUrls}
                 renderItem={renderIcon}
+                keyExtractor={(item, index) => index}
             ></FlatList>
             <Text style={{ fontFamily: 'Curiousness', paddingHorizontal: 10 }}>
                 Icons made by <Text onPress={() => Linking.openURL('https://www.flaticon.com/authors/roundicons')}> Roundicons</Text> from <Text style={{ color: 'blue' }} onPress={() => Linking.openURL('https://www.flaticon.com')}></Text>www.flaticon.com

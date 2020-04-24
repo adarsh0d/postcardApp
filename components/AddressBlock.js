@@ -36,6 +36,7 @@ const AddressBlock = ({ font, theme, editable = true, disableFullscreenUI = true
                     editable={editable}
                     ref={refs['addressLine1']}
                     value={address.addressLine1}
+                    selectionColor="transparent"
                     onSubmitEditing={() => {
                         refs['addressLine2'].current.focus()
                     }}
