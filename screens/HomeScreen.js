@@ -117,6 +117,7 @@ export default HomeScreen = () => {
     const [fontSize, setFontSize] = useState(fontSizes.big);
     const [backgroundCount, setBackground] = useState(0);
     const [foregroundCount, setForeground] = useState(0);
+    const [showStamp, setShowStamp] = useState(true);
     const [showStamps, setShowStamps] = useState(false);
     const [showImages, setShowImages] = useState(false);
     const [showForeGroundImages, setShowForeGroundImages] = useState(false);
@@ -130,6 +131,7 @@ export default HomeScreen = () => {
     const [borderColor, setBorderColor] = useState(BorderPallet.flat()[0])
     const [showColors, setShowColors] = useState(false);
     const [showBorderColors, setShowBorderColors] = useState(false);
+    const [showTitle, setToggleTitle] = useState(true);
     const toggleSwitch = () => setIsEnabled(previousState => !previousState);
     const snapshot = async () => {
         const result = await printRef.current.capture();
@@ -222,20 +224,24 @@ export default HomeScreen = () => {
                                         </View>
                                         <View style={selectedTheme.cardRight}>
                                             <View style={selectedTheme.cardHeader}>
-                                                <View style={selectedTheme.cardTitle}>
-                                                    {theme === 'light' && (
-                                                        <TextInput
-                                                            disableFullscreenUI={true}
-                                                            style={selectedTheme.cardText}
-                                                            defaultValue="POST-CARD"
-                                                            underlineColorAndroid="transparent"
-                                                        />
-                                                    )}
-                                                    <Text style={selectedTheme.extraBorder}></Text>
-                                                </View>
-                                                <View style={selectedTheme.cardStamp}>
-                                                    <StampArea theme={selectedTheme} viewStamps={() => setShowStamps(!showStamps)} stampImage={stampImage} showText={false}></StampArea>
-                                                </View>
+                                                {showTitle && (
+                                                    <View style={selectedTheme.cardTitle}>
+                                                        {theme === 'light' && (
+                                                            <TextInput
+                                                                disableFullscreenUI={true}
+                                                                style={selectedTheme.cardText}
+                                                                defaultValue="POST-CARD"
+                                                                underlineColorAndroid="transparent"
+                                                            />
+                                                        )}
+                                                        <Text style={selectedTheme.extraBorder}></Text>
+                                                    </View>
+                                                )}
+                                                {showStamp && (
+                                                    <View style={selectedTheme.cardStamp}>
+                                                        <StampArea theme={selectedTheme} viewStamps={() => setShowStamps(!showStamps)} stampImage={stampImage} showText={false}></StampArea>
+                                                    </View>
+                                                )}
                                             </View>
                                             <View style={selectedTheme.addressBlock}>
                                                 <AddressBlock theme={selectedTheme} editable={true} setParentAddress={(val) => setAddress(val)} font={font}></AddressBlock>
@@ -303,6 +309,10 @@ export default HomeScreen = () => {
                 showBorderColors={() =>  setShowBorderColors(!showBorderColors)}
                 showColors={() =>  setShowColors(!showColors)}
                 hideAllPanels={() => hideAllPanels()}
+                toggleStamp={() => setShowStamp(!showStamp)}
+                showStamp={showStamp}
+                toggleTitle={() => setToggleTitle(!showTitle)}
+                showTitle={showTitle}
             >
 
             </BottomBar>

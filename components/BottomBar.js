@@ -19,6 +19,10 @@ const BottomBar = ({
     showBorderColors,
     setImageCard ,
     hideAllPanels,
+    showStamp,
+    toggleStamp,
+    showTitle,
+    toggleTitle
 }) => (
         <View style={theme.bottomBar}>
 
@@ -50,12 +54,13 @@ const BottomBar = ({
                 }}>
                     <MaterialCommunityIcons name="border-all-variant" size={32} ></MaterialCommunityIcons>
                 </TouchableOpacity>
-                <TouchableOpacity style={theme.icon} onPress={() => setFontSize(fontSize - 1)}>
+                <TouchableOpacity style={theme.icon} onPress={() => setFontSize(fontSize - 4)}>
                     <MaterialCommunityIcons name="format-font-size-decrease" size={indent * 1.8} ></MaterialCommunityIcons>
                 </TouchableOpacity>
-                <TouchableOpacity style={theme.icon} onPress={() => setFontSize(fontSize + 1)}>
+                <TouchableOpacity style={theme.icon} onPress={() => setFontSize(fontSize + 4)}>
                     <MaterialCommunityIcons name="format-font-size-increase" size={32} ></MaterialCommunityIcons>
                 </TouchableOpacity>
+                
 
             </View>
             {/*<View style={theme.bottomMiddleBar}>
@@ -72,6 +77,26 @@ const BottomBar = ({
                 </View>
             </View>*/}
             <View style={theme.bottomRightBar}>
+            <View style={[theme.icon, {flexDirection: 'row', alignSelf: 'center'}]}>
+                    <Text style={theme.label}>Title</Text>
+                    <Switch
+                        trackColor={{ false: "#767577", true: "#81b0ff" }}
+                        thumbColor={showTitle ? "#f5dd4b" : "#f4f3f4"}
+                        ios_backgroundColor="#3e3e3e"
+                        onValueChange={toggleTitle}
+                        value={showTitle}
+                    />
+                </View>
+            <View style={[theme.icon, {flexDirection: 'row', alignSelf: 'center'}]}>
+                    <Text style={theme.label}>Stamp</Text>
+                    <Switch
+                        trackColor={{ false: "#767577", true: "#81b0ff" }}
+                        thumbColor={showStamp ? "#f5dd4b" : "#f4f3f4"}
+                        ios_backgroundColor="#3e3e3e"
+                        onValueChange={toggleStamp}
+                        value={showStamp}
+                    />
+                </View>
                 <TouchableOpacity onPress={() => setReset(false)} style={theme.button}>
                     <Text style={{ fontFamily: 'Curiousness', }}>Reset</Text>
                 </TouchableOpacity>

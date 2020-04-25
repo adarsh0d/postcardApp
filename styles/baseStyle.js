@@ -14,7 +14,8 @@ const baseStyle = (fontColor = colors.black, borderColor = colors.darkBrown) => 
             backgroundColor: colors.white
         },
         label: {
-            fontSize: fontSizes.small,
+            fontSize: fontSizes.medium,
+            fontFamily: "Curiousness"
         },
         textArea: {
             fontSize: 30,
@@ -88,15 +89,15 @@ const baseStyle = (fontColor = colors.black, borderColor = colors.darkBrown) => 
         cardHeader: {
             flexDirection: 'row',
             justifyContent: 'space-between',
-            marginHorizontal: 20
+            marginHorizontal: 20,
+            height: verticalIndent * 4,
         },
         cardTitle: {
             alignSelf: 'center',
             color: fontColor
-
         },
         cardStamp: {
-
+            alignSelf: 'flex-end'
         },
         cardText: {
             fontSize: 22,
