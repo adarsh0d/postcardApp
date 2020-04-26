@@ -1,8 +1,10 @@
-import React, { useEffect, useState } from 'react';
-import { Text, View, TouchableOpacity,Keyboard, TextInput as Input, ImageBackground, FlatList, KeyboardAvoidingView } from 'react-native';
-
+import React, { useEffect, useState, useContext } from 'react';
+import { Text, View, TouchableOpacity, Keyboard, TextInput as Input, ImageBackground, FlatList, KeyboardAvoidingView } from 'react-native';
+import { ColorThemeContext } from '../AppContext';
 import colors from '../styles/colors';
-const ImagePanel = ({ setStampImage, foreGround = false,theme, close, staticImages }) => {
+const ImagePanel = ({ setStampImage, foreGround = false, close, staticImages }) => {
+
+    const theme = useContext(ColorThemeContext);
     const [images, setRemoteImages] = useState([])
     const [localImages, setLocalImages] = useState(staticImages)
     const [searchText, setSearchText] = useState('')
@@ -21,7 +23,7 @@ const ImagePanel = ({ setStampImage, foreGround = false,theme, close, staticImag
     useEffect(() => {
         (async () => {
             const searchTerm = foreGround ? 'Pattern' : 'Old Paper';
-            const response = await fetch('https://api.pexels.com/v1/search?query='+ searchTerm +'&per_page=15&page=1', {
+            const response = await fetch('https://api.pexels.com/v1/search?query=' + searchTerm + '&per_page=15&page=1', {
                 method: 'GET',
                 headers: {
                     Authorization: '563492ad6f9170000100000103288f085b2f42d0849779503bab972b'
@@ -44,15 +46,15 @@ const ImagePanel = ({ setStampImage, foreGround = false,theme, close, staticImag
         } else if (!item.localUrl) {
             return (
                 <TouchableOpacity onPress={() => setStampImage({ uri: item.src.landscape })} style={{ margin: 5 }}>
-                    <ImageBackground source={{ uri: item.src.original }} imageStyle={{ resizeMode: 'contain' }} style={theme.stampImage}>
+                    <ImageBackground source={{ uri: item.src.tiny }} imageStyle={{ resizeMode: 'contain' }} style={theme.stampImage}>
                     </ImageBackground>
                 </TouchableOpacity>
             )
         }
     }
     return (
-        <View style={{ borderTopWidth: 1, borderColor: colors.brownDarker }}>
-            <View style={{flexDirection: 'row'}}>
+        <View style={{ borderTopWidth: 1, backgroundColor: '#fff', borderColor: colors.brownDarker }}>
+            <View style={{ flexDirection: 'row' }}>
                 <FlatList horizontal={true}
                     data={localImages}
                     renderItem={renderIcon}
@@ -79,13 +81,12 @@ const ImagePanel = ({ setStampImage, foreGround = false,theme, close, staticImag
                         borderColor: colors.darkGrey,
                         fontFamily: 'Curiousness',
                         alignSelf: 'flex-start',
-                        width: 400,
                         color: '#000',
                         paddingHorizontal: 10,
                         backgroundColor: '#ffffff'
                     }}
                 />
-                <TouchableOpacity onPress={() => {Keyboard.dismiss(); search()}} style={[theme.button, theme.icon, { alignSelf: "flex-start" }]}>
+                <TouchableOpacity onPress={() => { Keyboard.dismiss(); search() }} style={[theme.button, theme.icon, { alignSelf: "flex-start" }]}>
                     <Text style={{ fontFamily: 'Curiousness', }}>Search</Text>
                 </TouchableOpacity>
             </KeyboardAvoidingView>

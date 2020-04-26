@@ -1,12 +1,12 @@
 
 
-import React from 'react';
+import React, {useContext} from 'react';
 import { Text, View, TouchableOpacity, Switch } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-
 import { indent, } from '../styles/dimensions';
+import { ColorThemeContext } from '../AppContext';
+import { useNavigation } from '@react-navigation/native';
 const BottomBar = ({
-    theme,
     setFontSize,
     setReset,
     showForegrounds,
@@ -15,52 +15,45 @@ const BottomBar = ({
     rotateFonts,
     snapshot,
     fontSize,
-    imageCard,
     showBorderColors,
-    setImageCard ,
     hideAllPanels,
-    showStamp,
-    toggleStamp,
-    showTitle,
-    toggleTitle
-}) => (
+}) => {
+    const theme = useContext(ColorThemeContext);
+    const { navigate }  = useNavigation();
+    return (
         <View style={theme.bottomBar}>
-
-            <View style={theme.bottomLeftBar}>
-                <TouchableOpacity onPress={rotateFonts}>
-                    <MaterialCommunityIcons name="format-text" size={indent * 1.8} ></MaterialCommunityIcons>
+            <View style={[theme.bottomLeftBar]}>
+                <TouchableOpacity style={theme.option} onPress={rotateFonts}>
+                    <MaterialCommunityIcons style={theme.optionIcon} name="format-text" size={indent * 1.8} ></MaterialCommunityIcons>
+                    <Text style={theme.optionText}>Font Style</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={theme.icon} onPress={() => {
-                    hideAllPanels()
-                    showBackgrounds()
-                }}>
-                    <MaterialCommunityIcons name="image-area" size={indent * 2} ></MaterialCommunityIcons>
+                <TouchableOpacity style={theme.option} onPress={() => navigate('Background')}>
+                    <MaterialCommunityIcons style={theme.optionIcon} name="image-area" size={indent * 1.8} ></MaterialCommunityIcons>
+                    <Text style={theme.optionText}>Background</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={theme.icon} onPress={() => {
+                {/* <TouchableOpacity style={theme.option} onPress={() => {
                     hideAllPanels()
                     showForegrounds()
                 }}>
-                    <MaterialCommunityIcons name="image-area-close" size={indent * 2} ></MaterialCommunityIcons>
+                    <MaterialCommunityIcons style={theme.optionIcon} name="image-area-close" size={indent * 1.8} ></MaterialCommunityIcons>
+                    <Text style={theme.optionText}>Foreground</Text>
+                </TouchableOpacity> */}
+                <TouchableOpacity style={theme.option} onPress={() => navigate('Font Color')}>
+                    <MaterialCommunityIcons style={theme.optionIcon} name="palette" size={indent * 1.8} ></MaterialCommunityIcons>
+                    <Text style={theme.optionText}>Font Color</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={theme.icon} onPress={() => {
-                    hideAllPanels()
-                    showColors()
-                }}>
-                    <MaterialCommunityIcons name="palette" size={indent * 1.8} ></MaterialCommunityIcons>
-                </TouchableOpacity>
-                <TouchableOpacity style={theme.icon} onPress={() => {                    
+                <TouchableOpacity style={theme.option} onPress={() => {
                     hideAllPanels();
                     showBorderColors()
                 }}>
-                    <MaterialCommunityIcons name="border-all-variant" size={32} ></MaterialCommunityIcons>
+                    <MaterialCommunityIcons style={theme.optionIcon} name="border-all-variant" size={indent * 1.8} ></MaterialCommunityIcons>
+                    <Text style={theme.optionText}>Border</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={theme.icon} onPress={() => setFontSize(fontSize - 4)}>
-                    <MaterialCommunityIcons name="format-font-size-decrease" size={indent * 1.8} ></MaterialCommunityIcons>
+                <TouchableOpacity style={theme.option} onPress={() => setFontSize(fontSize - 4)}>
+                    <MaterialCommunityIcons style={theme.optionIcon} name="format-font-size-decrease" size={indent * 1.8} ></MaterialCommunityIcons>
+                    <Text style={theme.optionText}>Font Size</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={theme.icon} onPress={() => setFontSize(fontSize + 4)}>
-                    <MaterialCommunityIcons name="format-font-size-increase" size={32} ></MaterialCommunityIcons>
-                </TouchableOpacity>
-                
+
 
             </View>
             {/*<View style={theme.bottomMiddleBar}>
@@ -76,27 +69,8 @@ const BottomBar = ({
                     </TouchableOpacity>
                 </View>
             </View>*/}
-            <View style={theme.bottomRightBar}>
-            <View style={[theme.icon, {flexDirection: 'row', alignSelf: 'center'}]}>
-                    <Text style={theme.label}>Title</Text>
-                    <Switch
-                        trackColor={{ false: "#767577", true: "#81b0ff" }}
-                        thumbColor={showTitle ? "#f5dd4b" : "#f4f3f4"}
-                        ios_backgroundColor="#3e3e3e"
-                        onValueChange={toggleTitle}
-                        value={showTitle}
-                    />
-                </View>
-            <View style={[theme.icon, {flexDirection: 'row', alignSelf: 'center'}]}>
-                    <Text style={theme.label}>Stamp</Text>
-                    <Switch
-                        trackColor={{ false: "#767577", true: "#81b0ff" }}
-                        thumbColor={showStamp ? "#f5dd4b" : "#f4f3f4"}
-                        ios_backgroundColor="#3e3e3e"
-                        onValueChange={toggleStamp}
-                        value={showStamp}
-                    />
-                </View>
+            <View style={[theme.bottomRightBar, { marginVertical: 40, flexDirection: 'row' }]}>
+
                 <TouchableOpacity onPress={() => setReset(false)} style={theme.button}>
                     <Text style={{ fontFamily: 'Curiousness', }}>Reset</Text>
                 </TouchableOpacity>
@@ -106,5 +80,6 @@ const BottomBar = ({
             </View>
         </View>
     )
+}
 
 export default BottomBar;

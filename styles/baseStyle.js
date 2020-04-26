@@ -1,9 +1,78 @@
 import { Dimensions } from 'react-native';
-import { verticalIndent, indent, halfVerticalIndent } from './dimensions';
+import { verticalIndent, indent, halfVerticalIndent, containerWidth } from './dimensions';
 const { width, height } = Dimensions.get('window');
 
 import fontSizes from './fontSizes'
 import colors from './colors';
+
+const addressBlock = (fontColor, borderColor) => {
+    return {
+        pinBlock: {
+            flex: 1,
+            flexDirection: 'row',
+            marginTop: halfVerticalIndent
+        },
+        pinBox: {
+            borderWidth: 1,
+            borderColor: borderColor,
+            borderStyle: 'dotted',
+            marginRight: 5,
+            marginTop: 10,
+            height: verticalIndent,
+            width: verticalIndent,
+            textAlign: 'center',
+            fontSize: fontSizes.verySmall,
+            color: fontColor
+        },
+        addressBoxInput: {
+            borderStyle: 'dotted',
+            fontSize: fontSizes.small,
+            color: fontColor,
+            height: verticalIndent * 1.2,
+            textAlignVertical: 'bottom'
+        },
+        addressBox: {
+            borderBottomWidth: 1,
+            borderBottomColor: borderColor,
+        },
+        addressBlock: {
+            flex: 1,
+        },
+    }
+}
+const bottomBar = (fontColor, borderColor) => {
+    return {
+        bottomBar: {
+            backgroundColor: 'rgba(255, 255, 255, 0.6)',
+            color: colors.white,
+        },
+        bottomLeftBar: {
+            flexDirection: 'row',
+            marginVertical: verticalIndent,
+            flexWrap: 'wrap',
+            alignItems: 'flex-start'
+        },
+        bottomMiddleBar: {
+            flexDirection: 'row',
+        },
+        bottomRightBar: {
+            flex: 1,
+        },
+        option: {
+            width: width / 3,
+            justifyContent: 'center',
+            alignItems: 'center',
+            marginVertical: verticalIndent
+        },
+        optionIcon: {
+            marginBottom: halfVerticalIndent
+        },
+        optionText: {
+            fontSize: fontSizes.small,
+            fontFamily: "Curiousness"
+        },
+    }
+};
 const baseStyle = (fontColor = colors.black, borderColor = colors.darkBrown) => {
     return {
         container: {
@@ -20,41 +89,13 @@ const baseStyle = (fontColor = colors.black, borderColor = colors.darkBrown) => 
         textArea: {
             fontSize: 30,
             textAlign: 'left',
-            paddingHorizontal: indent,
             alignSelf: 'flex-start',
             fontFamily: 'BottleParty',
             height: '100%',
             color: fontColor,
             textAlignVertical: 'top',
-            padding: 10
         },
-        pinBox: {
-            borderWidth: 1,
-            borderColor: borderColor,
-            borderStyle: 'dotted',
-            marginRight: 5,
-            marginTop: 10,
-            height: indent * 2,
-            width: indent * 2,
-            textAlign: 'center',
-            fontSize: fontSizes.xxmedium,
-            color: fontColor
-        },
-        addressBoxInput: {
-            borderStyle: 'dotted',
-            fontSize: fontSizes.xxmedium,
-            color: fontColor
-        },
-        addressBox: {
-            borderBottomWidth: 1,
-            borderBottomColor: borderColor,
-            marginBottom: 10,
-
-        },
-        addressBlock: {
-            marginHorizontal: 20,
-            marginBottom: 10,
-        },
+        
         foreGround: {
             width: '100%',
             height: '100%',
@@ -62,50 +103,47 @@ const baseStyle = (fontColor = colors.black, borderColor = colors.darkBrown) => 
             alignItems: 'center'
         },
         backgroundContainer: {
-            margin: 30,
+            margin: 0,
         },
         backGround: {
-            height: 400,
-            width: 800,
             elevation: 10,
+            aspectRatio: 16/9
         },
         cardContainer: {
             flex: 1,
-            padding: 10,
             flexDirection: 'row',
             flexWrap: 'wrap',
+            paddingVertical: halfVerticalIndent,
         },
         cardLeft: {
             flex: 0.5,
-            height: '100%',
             borderRightWidth: 1,
             borderRightColor: borderColor,
+            paddingHorizontal: halfVerticalIndent,
         },
         cardRight: {
             flex: 0.5,
-            width: '100%',
-            paddingVertical: 20,
+            paddingHorizontal: halfVerticalIndent,
+            paddingVertical: indent
         },
         cardHeader: {
             flexDirection: 'row',
-            justifyContent: 'space-between',
-            marginHorizontal: 20,
-            height: verticalIndent * 4,
+            justifyContent: 'space-between'
         },
         cardTitle: {
             alignSelf: 'center',
-            color: fontColor
+            color: fontColor,
         },
         cardStamp: {
-            alignSelf: 'flex-end'
+            alignSelf: 'flex-end',
         },
         cardText: {
-            fontSize: 22,
             fontFamily: 'Curiousness',
             borderBottomWidth: 2,
             borderColor: fontColor,
             textDecorationColor: 'transparent',
             color: fontColor,
+            fontSize: fontSizes.small
         },
         extraBorder: {
             fontSize: 2,
@@ -113,38 +151,15 @@ const baseStyle = (fontColor = colors.black, borderColor = colors.darkBrown) => 
             borderBottomWidth: 2,
             borderBottomColor: fontColor
         },
-        bottomBar: {
-            backgroundColor: 'rgba(255, 255, 255, 0.6)',
-            color: colors.white,
-            flexDirection: 'row',
-            height: indent * 2.5,
-            padding: 5,
-            justifyContent: 'space-between'
-        },
-        bottomLeftBar: {
-            flex: 1,
-            alignSelf: 'flex-start',
-            flexDirection: 'row',
-        },
-        bottomMiddleBar: {
-            flexDirection: 'row',
-            justifyContent: 'center',
-            alignItems: 'flex-start'
-        },
-        bottomRightBar: {
-            flex: 1,
-            alignSelf: 'flex-end',
-            flexDirection: 'row',
-            justifyContent: 'flex-end'
-        },
+
         button: {
             borderRadius: 20,
             alignSelf: 'flex-end',
-            marginRight: 8,
+            marginRight: indent / 2,
             alignItems: 'center',
             justifyContent: 'center',
             textAlign: 'center',
-            paddingVertical: 5,
+            paddingVertical: verticalIndent,
             borderWidth: 1,
             borderColor: colors.brownDarker,
             width: indent * 5.5
@@ -155,18 +170,25 @@ const baseStyle = (fontColor = colors.black, borderColor = colors.darkBrown) => 
         placeholder: {
             color: fontColor
         },
+
+        stampIcon: {
+            width: indent * 2,
+            height: indent * 2,
+            alignItems: 'center',
+            justifyContent: 'center',
+        },
         messageAreaFront: {
             alignSelf: 'flex-start',
-            padding: 10,
-            marginTop: 5,
+            paddingHorizontal: halfVerticalIndent,
+            paddingVertical: verticalIndent,
             width: '100%',
         },
         messageAreaBack: {
             alignSelf: 'flex-start',
         },
         stampImage: {
-            width: 80,
-            height: 80,
+            width: indent * 4,
+            height: indent * 4,
             alignItems: 'center',
             justifyContent: 'center',
         },
@@ -179,18 +201,20 @@ const baseStyle = (fontColor = colors.black, borderColor = colors.darkBrown) => 
         stampArea: {
             borderColor: borderColor,
             borderWidth: 1,
-            height: indent * 5,
-            width: indent * 5,
-            padding: 20,
+            height: verticalIndent * 2,
+            width: verticalIndent * 2,
+            padding: indent,
             justifyContent: 'center',
             alignItems: 'center',
         },
-        stampAreaText: {
-            fontFamily: 'Curiousness',
-            textAlign: 'center',
-            opacity: 0.3,
-            color: fontColor,
-            fontSize: fontSizes.verySmall
+        stampArea: {
+            borderColor: borderColor,
+            borderWidth: 1,
+            height: verticalIndent * 2,
+            width: verticalIndent * 2,
+            padding: indent,
+            justifyContent: 'center',
+            alignItems: 'center',
         },
         tab: {
             alignSelf: 'flex-end',
@@ -208,7 +232,9 @@ const baseStyle = (fontColor = colors.black, borderColor = colors.darkBrown) => 
             alignItems: 'flex-end',
             justifyContent: 'flex-end',
             paddingHorizontal: indent
-        }
+        },
+        ...addressBlock(fontColor, borderColor),
+        ...bottomBar(fontColor, borderColor)
 
     }
 }

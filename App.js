@@ -1,11 +1,10 @@
 import React from 'react';
-import { StyleSheet, View, Text} from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
-import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
+import { StyleSheet, View, Text } from 'react-native';
 import { useFonts } from '@use-expo/font';
 import { AppLoading } from 'expo';
-const Tab = createMaterialTopTabNavigator();
-
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+const Stack = createStackNavigator();
 import HomeScreen from './screens/HomeScreen';
 function cacheFonts(fonts) {
   return fonts.map(font => Font.loadAsync(font));
@@ -24,6 +23,12 @@ export default function App() {
     return <AppLoading />;
   }
   return (
-    <HomeScreen></HomeScreen>
+    <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen name="Home" component={HomeScreen} options={{
+          headerShown: false,
+        }} />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }

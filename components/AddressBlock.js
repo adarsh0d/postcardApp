@@ -71,10 +71,7 @@ const AddressBlock = ({ font, theme, editable = true, disableFullscreenUI = true
                     onChangeText={(text) => setAddress({ ...address, addressLine3: text })}
                 />
             </View>
-            <View style={{
-                flexDirection: 'row',
-                width: '100%'
-            }}>
+            <View style={theme.pinBlock}>
                 <TextInput
                     style={[theme.pinBox, { fontFamily: fonts[font] }]}
                     placeholderTextColor={theme.placeholder.color}
