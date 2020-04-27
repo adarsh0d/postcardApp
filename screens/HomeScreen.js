@@ -11,15 +11,13 @@ import baseStyle from '../styles/baseStyle';
 import { moderateScale } from '../styles/scalingUtils';
 
 import { fonts, foreGrounds, letterBackgrounds, imgBackgrounds } from '../utils/consts';
-import AddressBlock from '../components/AddressBlock';
-import TextAreaBlock from '../components/TextAreaBlock';
-import StampArea from '../components/StampsArea';
 import BottomBar from '../components/BottomBar'
 import IconsPanel from '../components/IconsPanel';
 import ImagePanel from '../components/ImagePanel';
 import ColorsPanel from '../components/colorsPanel';
 import { Pallet, BorderPallet } from '../utils/pallet';
 import { ColorThemeContext } from '../AppContext'
+import Letter from '../templates/postcards/letter1';
 const Stack = createStackNavigator();
 const themesStyleSheets = (fontColor, borderColor) => {
     return {
@@ -124,8 +122,7 @@ export default HomeScreen = () => {
     const [showImages, setShowImages] = useState(false);
     const [showForeGroundImages, setShowForeGroundImages] = useState(false);
     const [stampImage, setStampImage] = useState(null);
-    const [foregroundImage, setForeGroundImage] = useState(imgBackgrounds[0].localUrl);
-    const [backgroundImage, setBackgroundImage] = useState(letterBackgrounds[0].localUrl);
+ 
     const [showHeader, setShowHeader] = useState(true);
     const [showPrint, setShowPreview] = useState(false);
     const [imageCard, setCardType] = useState(false);
@@ -216,41 +213,8 @@ export default HomeScreen = () => {
     return (
         <ColorThemeContext.Provider value={selectedTheme}>
             <View style={selectedTheme.container}>
-                <View style={selectedTheme.backgroundContainer}>
-                    <ImageBackground ref={printRef} source={backgroundImage} imageStyle={{ resizeMode: 'cover' }} style={selectedTheme.backGround}>
-                        <View style={selectedTheme.cardContainer}>
-                            <View style={selectedTheme.cardLeft}>
-                                {showHeader && (
-                                    <TextAreaBlock theme={selectedTheme} fontSize={fontSize} font={font} setSideBlock={(val) => turnSide(val)}></TextAreaBlock>
-                                )}
-                            </View>
-                            <View style={selectedTheme.cardRight}>
-                                <View style={selectedTheme.cardHeader}>
-                                    {showTitle && (
-                                        <View style={selectedTheme.cardTitle}>
-                                            {theme === 'light' && (
-                                                <TextInput
-                                                    disableFullscreenUI={true}
-                                                    style={selectedTheme.cardText}
-                                                    defaultValue="POST-CARD"
-                                                    underlineColorAndroid="transparent"
-                                                />
-                                            )}
-                                            <Text style={selectedTheme.extraBorder}></Text>
-                                        </View>
-                                    )}
-                                    {showStamp && (
-                                        <View style={selectedTheme.cardStamp}>
-                                            <StampArea theme={selectedTheme} viewStamps={() => setShowStamps(!showStamps)} stampImage={stampImage} showText={false}></StampArea>
-                                        </View>
-                                    )}
-                                </View>
-                                <View style={selectedTheme.addressBlock}>
-                                    <AddressBlock theme={selectedTheme} editable={true} setParentAddress={(val) => setAddress(val)} font={font}></AddressBlock>
-                                </View>
-                            </View>
-                        </View>
-                    </ImageBackground>
+                <View style={selectedTheme.backgroundContainer} ref={printRef}>
+                   <Letter></Letter>
                 </View>
 
                 {showStamps && (
