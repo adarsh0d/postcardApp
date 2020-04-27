@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useEffect, useState, useReducer, useContext } from 'react';
 import { Text, View, TouchableOpacity, Keyboard, TextInput as Input, Image, ScrollView, FlatList, KeyboardAvoidingView } from 'react-native';
 import { ColorThemeContext } from '../AppContext';
 import colors from '../styles/colors';
@@ -7,21 +7,36 @@ import { halfVerticalIndent, indent, verticalIndent } from '../styles/dimensions
 import { MaterialIcons } from '@expo/vector-icons';
 const { width, height } = Dimensions.get('window');
 
-import { letterBackgrounds } from '../utils/consts';
-const ImagePanel = ({ foreGround = false, close, staticImages }) => {
-    const [pageNo, setPageNo] = useState(1);
+const ImagePanel = ({ foreGround = false, }) => {
+    const [state, dispatch] = useReducer(
+        (prevState, action) => {
+            switch (action.type) {
+                case 'NEXT_PAGE':
+                    return {
+                        ...prevState,
+                        pageNo: prevState.pageNo + 1
+                    }
+                case 'PREV_PAGE':
+                    return {
+                        ...prevState,
+                        pageNo: prevState.pageNo - 1
+                    }
+            }
+        }, {
+        pageNo: 1
+    })
     const { theme, setBackgroundImage } = useContext(ColorThemeContext);
     const [images, setRemoteImages] = useState([])
-    const [localImages, setLocalImages] = useState(letterBackgrounds)
     const [searchText, setSearchText] = useState('')
-    const search = async () => {
+    const search = async (pageNo) => {
+        console.log(pageNo);
         let searchTerm = ''
-        if(!searchText) {
+        if (!searchText) {
             searchTerm = 'Old Paper';
         } else {
             searchTerm = searchText
         }
-        const response = await fetch('https://api.pexels.com/v1/search?query=' + searchTerm + '&per_page=100&page='+pageNo, {
+        const response = await fetch('https://api.pexels.com/v1/search?query=' + searchTerm + '&per_page=100&page=' + pageNo, {
             method: 'GET',
             headers: {
                 Authorization: '563492ad6f9170000100000103288f085b2f42d0849779503bab972b'
@@ -32,21 +47,21 @@ const ImagePanel = ({ foreGround = false, close, staticImages }) => {
             await setRemoteImages(result.photos);
         }
     };
-    const setPrevPage = () => {
-        if(pageNo !=1) {
-            setPageNo(pageNo - 1);
-            search()
+    const setPrevPage = async () => {
+        if(state.pageNo - 1 >= 1) {
+            dispatch({type: 'PREV_PAGE'})
+            search(state.pageNo - 1)
         }
     }
-    const setNextPage = () => {
-            setPageNo(pageNo + 1);
-            search()
+    const setNextPage = async () => {
+        dispatch({type: 'NEXT_PAGE'})
+        search(state.pageNo + 1)
     }
     const imagewidth = (width - (halfVerticalIndent / 2) * 2) / 4;
     useEffect(() => {
         (async () => {
             const searchTerm = foreGround ? 'Pattern' : 'Old Paper';
-            const response = await fetch('https://api.pexels.com/v1/search?query=' + searchTerm + '&per_page=100&page='+pageNo, {
+            const response = await fetch('https://api.pexels.com/v1/search?query=' + searchTerm + '&per_page=100&page=1', {
                 method: 'GET',
                 headers: {
                     Authorization: '563492ad6f9170000100000103288f085b2f42d0849779503bab972b'
@@ -76,14 +91,14 @@ const ImagePanel = ({ foreGround = false, close, staticImages }) => {
         }
     }
     return (
-        <View style={{flex: 1}}>          
-            <View style={{ flex:1 }}>
+        <View style={{ flex: 1 }}>
+            <View style={{ flex: 1 }}>
                 <View style={{
                     flexDirection: 'row',
                     justifyContent: 'space-between',
                     width: '100%',
                     paddingVertical: halfVerticalIndent,
-                    paddingHorizontal: halfVerticalIndent /2
+                    paddingHorizontal: halfVerticalIndent / 2
                 }}>
                     <KeyboardAvoidingView style={{
                         flexDirection: 'row',
@@ -109,11 +124,11 @@ const ImagePanel = ({ foreGround = false, close, staticImages }) => {
                         </TouchableOpacity>
 
                     </KeyboardAvoidingView>
-                    <View style={{ flexDirection: 'row'}}>
-                        <TouchableOpacity onPress={() => { setPrevPage()}} style={[theme.icon, { width: 'auto' }]}>
-                            <MaterialIcons name="navigate-before" size={indent * 1.8}></MaterialIcons>
+                    <View style={{ flexDirection: 'row' }}>
+                        <TouchableOpacity onPress={setPrevPage} >
+                            <MaterialIcons name="navigate-before" style={{ opacity: state.pageNo < 2 ? 0.1 : 1 }} size={indent * 1.8}></MaterialIcons>
                         </TouchableOpacity>
-                        <TouchableOpacity onPress={() => { setNextPage() }} style={[theme.icon, { width: 'auto' }]}>
+                        <TouchableOpacity onPress={setNextPage}>
                             <MaterialIcons name="navigate-next" size={indent * 1.8}></MaterialIcons>
                         </TouchableOpacity>
                     </View>

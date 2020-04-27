@@ -10,7 +10,7 @@ const TextAreaBlock = ({ defaultSide, fontSize = fontSizes.xxmedium, editable = 
     const updateSize = (size) => {
         setHeight(size);
     }
-   
+    const [frontText, setFrontText] = useState('');    
     return (
         <KeyboardAvoidingView>
             {showButtons && (
@@ -38,7 +38,9 @@ const TextAreaBlock = ({ defaultSide, fontSize = fontSizes.xxmedium, editable = 
                         editable={editable}
                         maxLength={500}
                         ref={textRef}
+                        value={frontText}
                         disableFullscreenUI={true}
+                        onChangeText={(text) => setFrontText(text)}
                     />
 
                 </View>

@@ -270,7 +270,7 @@ export default HomeScreen = () => {
                                         {theme === 'light' && (
                                             <TextInput
                                                 disableFullscreenUI={true}
-                                                style={selectedTheme.cardText}
+                                                style={[selectedTheme.cardText]}
                                                 defaultValue="POST-CARD"
                                                 underlineColorAndroid="transparent"
                                             />

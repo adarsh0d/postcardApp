@@ -28,7 +28,6 @@ const addressBlock = (fontColor, borderColor) => {
             borderStyle: 'dotted',
             fontSize: fontSizes.small,
             color: fontColor,
-            height: verticalIndent * 1.2,
             textAlignVertical: 'bottom'
         },
         addressBox: {
