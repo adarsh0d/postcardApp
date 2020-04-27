@@ -1,8 +1,8 @@
 import React, { useState, useRef, useEffect, useReducer } from 'react';
-import { ImageBackground, Text, StyleSheet, TextInput, ScrollView, View, } from 'react-native';
+import { ImageBackground, Text, StyleSheet, TextInput, TouchableOpacity, View, AsyncStorage, } from 'react-native';
 
 import { createStackNavigator } from '@react-navigation/stack';
-import {captureRef} from 'react-native-view-shot';
+import { captureRef } from 'react-native-view-shot';
 import * as Sharing from 'expo-sharing';
 import colors from '../styles/colors';
 import baseStyle from '../styles/baseStyle';
@@ -111,6 +111,13 @@ const themesStyleSheets = (fontColor, borderColor) => {
 
 const themes = ['light', 'dark'];
 export default HomeScreen = () => {
+    // useEffect(() => {
+    //     async () => {
+    //         const items = await AsyncStorage.getItem('cards');
+    //         console.log(items)
+
+    //     }
+    // })
     const [state, dispatch] = React.useReducer(
         (prevState, action) => {
             switch (action.type) {
@@ -160,6 +167,21 @@ export default HomeScreen = () => {
                         ...prevState,
                         alpha: action.payload,
                     }
+                case 'SET_SHOW_TITLE':
+                    return {
+                        ...prevState,
+                        showTitle: !prevState.showTitle,
+                    }
+                case 'SET_SHOW_TITLE':
+                    return {
+                        ...prevState,
+                        showTitle: !prevState.showTitle,
+                    }
+                case 'SET_SHOW_STAMP':
+                    return {
+                        ...prevState,
+                        showStamp: !prevState.showStamp,
+                    }
                 case 'SIGN_OUT':
                     return {
                         ...prevState,
@@ -176,8 +198,11 @@ export default HomeScreen = () => {
             fontColor: Pallet.flat()[0],
             borderColor: BorderPallet.flat()[0],
             alpha: 0,
-            backgroundColor: 'none'
+            backgroundColor: 'none',
+            showTitle: true,
+            showStamp: true
         }
+
     );
     const [theme, setTheme] = useState(themes[0]);
 
@@ -204,6 +229,8 @@ export default HomeScreen = () => {
             stampImage: state.stampImage,
             backgroundColor: state.backgroundColor,
             alpha: state.alpha,
+            showTitle: state.showTitle,
+            showStamp: state.showStamp,
             setBackgroundImage: async data => {
                 dispatch({ type: 'SET_BACKGROUND', payload: data });
             },
@@ -228,33 +255,50 @@ export default HomeScreen = () => {
             setBackgroundAlpha: async data => {
                 dispatch({ type: 'SET_BACKGROUND_FILM', payload: data });
             },
-            snapshot: async => {
-                captureRef(printRef, {
-                    format: "png",
-                    quality: 1,
-                    width: 1600,
-                    height: 800
-                }).then(
-                    async (uri) => {
-                        const sharingAvailable = await Sharing.isAvailableAsync();
-                        if (sharingAvailable) {
-                            // const manipResult = await ImageManipulator.manipulateAsync(
-                            //     uri,
-                            // );
-                            Sharing.shareAsync(uri);
-                        }
-                    })
-            }
+            setShowStamp: async data => {
+                dispatch({ type: 'SET_SHOW_STAMP', payload: data });
+            },
+            setShowTitle: async data => {
+                dispatch({ type: 'SET_SHOW_TITLE', payload: data });
+            },
+
         }),
         [
             state.fontColor,
             state.borderColor,
             state.stampImage,
             state.backgroundColor,
-            state.alpha
+            state.alpha,
+            state.showTitle,
+            state.showStamp
         ]
     );
-
+    const snapshot = async () => {
+        captureRef(printRef, {
+            format: "png",
+            quality: 1,
+            width: 1600,
+            height: 800
+        }).then(
+            async (uri) => {
+                const sharingAvailable = await Sharing.isAvailableAsync();
+                if (sharingAvailable) {
+                    Sharing.shareAsync(uri);
+                    // const savedCards = await AsyncStorage.getItem('cards');
+                    // const savedCardsObj = JSON.parse(savedCards);
+                    // AsyncStorage.setItem('cards', [savedCardsObj, ...state]);
+                }
+            })
+    }
+    const ShareButton = () => {
+        return (
+            <View style={[selectedTheme.bottomRightBar, { alignSelf: 'center', marginVertical: 10, justifyContent: 'center', flexDirection: 'row' }]}>
+                <TouchableOpacity onPress={snapshot} style={selectedTheme.button}>
+                    <Text style={{ fontFamily: 'Curiousness', }}>Share</Text>
+                </TouchableOpacity>
+            </View>
+        )
+    }
     return (
         <ColorThemeContext.Provider value={homepageContext}>
             <View style={selectedTheme.container}>
@@ -266,21 +310,24 @@ export default HomeScreen = () => {
                             </View>
                             <View style={selectedTheme.cardRight}>
                                 <View style={selectedTheme.cardHeader}>
-                                    <View style={selectedTheme.cardTitle}>
-                                        {theme === 'light' && (
-                                            <TextInput
-                                                disableFullscreenUI={true}
-                                                style={[selectedTheme.cardText]}
-                                                defaultValue="POST-CARD"
-                                                underlineColorAndroid="transparent"
-                                            />
-                                        )}
-                                        <Text style={selectedTheme.extraBorder}></Text>
-                                    </View>
-
-                                    <View style={selectedTheme.cardStamp}>
-                                        <StampArea theme={selectedTheme} stampImage={state.stampImage} showText={false}></StampArea>
-                                    </View>
+                                    {state.showTitle && (
+                                        <View style={selectedTheme.cardTitle}>
+                                            {theme === 'light' && (
+                                                <TextInput
+                                                    disableFullscreenUI={true}
+                                                    style={[selectedTheme.cardText]}
+                                                    defaultValue="POST-CARD"
+                                                    underlineColorAndroid="transparent"
+                                                />
+                                            )}
+                                            <Text style={selectedTheme.extraBorder}></Text>
+                                        </View>
+                                    )}
+                                    {state.showStamp && (
+                                        <View style={selectedTheme.cardStamp}>
+                                            <StampArea theme={selectedTheme} stampImage={state.stampImage} showText={false}></StampArea>
+                                        </View>
+                                    )}
                                 </View>
                                 <View style={selectedTheme.addressBlock}>
                                     <AddressBlock theme={selectedTheme} editable={true} setParentAddress={(val) => setAddress(val)} font={state.font}></AddressBlock>
@@ -292,17 +339,46 @@ export default HomeScreen = () => {
 
 
                 <Stack.Navigator>
-                    <Stack.Screen name="Actions" component={BottomBar} />
-                    <Stack.Screen name="Fonts" component={FontStyles} />
+                    <Stack.Screen name="Actions" component={BottomBar} options={{
+
+                        headerRight: () => (
+                            <ShareButton></ShareButton>
+                        ),
+                    }} />
+                    <Stack.Screen name="Fonts" component={FontStyles} options={{
+                        headerRight: () => (
+                            <ShareButton></ShareButton>
+                        )
+                    }} />
                     <Stack.Screen name="Background" component={BackgroundScreen}
-                        initialParams={{ pallet: Pallet }} />
+                        initialParams={{ pallet: Pallet }} options={{
+                            headerRight: () => (
+                                <ShareButton></ShareButton>
+                            )
+                        }} />
                     <Stack.Screen name="Font Color" component={FontColors}
-                        initialParams={{ pallet: Pallet }}
+                        initialParams={{ pallet: Pallet }} options={{
+                            headerRight: () => (
+                                <ShareButton></ShareButton>
+                            )
+                        }}
                     />
-                    <Stack.Screen name="Border Color" component={BorderColors}
-                        initialParams={{ pallet: BorderPallet }}
+                    <Stack.Screen name="Border Color" component={BorderColors} options={{
+                        headerRight: () => (
+                            <ShareButton></ShareButton>
+                        )
+                    }}
+                        initialParams={{ pallet: BorderPallet }} options={{
+                            headerRight: () => (
+                                <ShareButton></ShareButton>
+                            )
+                        }}
                     />
-                    <Stack.Screen name="Stamps" component={IconsPanel}
+                    <Stack.Screen name="Stamps" component={IconsPanel} options={{
+                        headerRight: () => (
+                            <ShareButton></ShareButton>
+                        )
+                    }}
                     />
                 </Stack.Navigator>
 

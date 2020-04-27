@@ -126,7 +126,8 @@ const baseStyle = (fontColor = colors.black, borderColor = colors.darkBrown) => 
         },
         cardHeader: {
             flexDirection: 'row',
-            justifyContent: 'space-between'
+            justifyContent: 'flex-start',
+            width: '100%',
         },
         cardTitle: {
             alignSelf: 'center',
@@ -134,6 +135,8 @@ const baseStyle = (fontColor = colors.black, borderColor = colors.darkBrown) => 
         },
         cardStamp: {
             alignSelf: 'flex-end',
+            flex: 1,
+            alignItems: 'flex-end'
         },
         cardText: {
             fontFamily: 'Curiousness',

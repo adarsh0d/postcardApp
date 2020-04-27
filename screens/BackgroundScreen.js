@@ -8,6 +8,7 @@ import { createMaterialTopTabNavigator } from '@react-navigation/material-top-ta
 const Tab = createMaterialTopTabNavigator();
 import BackgroundGalleryList from './BackgroundGalleryList';
 import BackgroundColorsList from './BackgroundColorsList';
+import LocalGalleryList from './LocalGalleryList';
 import { halfVerticalIndent, verticalIndent } from '../styles/dimensions';
 import { ColorThemeContext } from '../AppContext';
 const BackgroundScreen = () => {
@@ -23,7 +24,7 @@ const BackgroundScreen = () => {
                 <Tab.Navigator>
                     <Tab.Screen name="Image" component={BackgroundGalleryList} />
                     <Tab.Screen name="Colors" component={BackgroundColorsList} initialParams={{ pallet: route.params.pallet }} />
-                    {/* <Tab.Screen name="Gallery" component={BackgroundColorsList} /> */}
+                   <Tab.Screen name="Gallery" component={LocalGalleryList}/> 
                 </Tab.Navigator>
             </View>
         </View>

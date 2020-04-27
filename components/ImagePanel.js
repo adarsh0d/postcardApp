@@ -5,6 +5,9 @@ import colors from '../styles/colors';
 import { Dimensions } from 'react-native';
 import { halfVerticalIndent, indent, verticalIndent } from '../styles/dimensions';
 import { MaterialIcons } from '@expo/vector-icons';
+
+import * as Permissions from 'expo-permissions';
+import * as ImagePicker from 'expo-image-picker';
 const { width, height } = Dimensions.get('window');
 
 const ImagePanel = ({ foreGround = false, }) => {
@@ -29,7 +32,6 @@ const ImagePanel = ({ foreGround = false, }) => {
     const [images, setRemoteImages] = useState([])
     const [searchText, setSearchText] = useState('')
     const search = async (pageNo) => {
-        console.log(pageNo);
         let searchTerm = ''
         if (!searchText) {
             searchTerm = 'Old Paper';
@@ -48,16 +50,29 @@ const ImagePanel = ({ foreGround = false, }) => {
         }
     };
     const setPrevPage = async () => {
-        if(state.pageNo - 1 >= 1) {
-            dispatch({type: 'PREV_PAGE'})
+        if (state.pageNo - 1 >= 1) {
+            dispatch({ type: 'PREV_PAGE' })
             search(state.pageNo - 1)
         }
     }
     const setNextPage = async () => {
-        dispatch({type: 'NEXT_PAGE'})
+        dispatch({ type: 'NEXT_PAGE' })
         search(state.pageNo + 1)
     }
     const imagewidth = (width - (halfVerticalIndent / 2) * 2) / 4;
+    const setImage = async () => {
+        let { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+        if (status == 'granted') {
+            let result = await ImagePicker.launchImageLibraryAsync({
+                allowsEditing: true,
+                aspect: [16, 9],
+                quality: 1
+            });
+            if (!result.cancelled) {
+                setBackgroundImage({ uri: result.uri });
+            }
+        }
+    }
     useEffect(() => {
         (async () => {
             const searchTerm = foreGround ? 'Pattern' : 'Old Paper';
@@ -93,6 +108,7 @@ const ImagePanel = ({ foreGround = false, }) => {
     return (
         <View style={{ flex: 1 }}>
             <View style={{ flex: 1 }}>
+               
                 <View style={{
                     flexDirection: 'row',
                     justifyContent: 'space-between',
@@ -103,7 +119,7 @@ const ImagePanel = ({ foreGround = false, }) => {
                     <KeyboardAvoidingView style={{
                         flexDirection: 'row',
                     }}>
-                        <Input placeholder="Search Gallery"
+                        <Input placeholder="Search"
                             onChangeText={(text) => setSearchText(text)}
                             disableFullscreenUI={true}
                             style={{
