@@ -1,7 +1,6 @@
 
 import React, {useRef, useState} from 'react';
 import { Text,KeyboardAvoidingView, TextInput, View, } from 'react-native';
-import { fonts} from '../utils/consts';
 
 const TextAreaBlock = ({ defaultSide, fontSize = fontSizes.xxmedium, editable = true, font, theme,  setSideBlock, showButtons = false }) => {
     const [height, setHeight] = useState(50);
@@ -11,7 +10,7 @@ const TextAreaBlock = ({ defaultSide, fontSize = fontSizes.xxmedium, editable = 
     const updateSize = (size) => {
         setHeight(size);
     }
-    const [frontText, setFrontText] = useState('');    
+   
     return (
         <KeyboardAvoidingView>
             {showButtons && (
@@ -28,24 +27,18 @@ const TextAreaBlock = ({ defaultSide, fontSize = fontSizes.xxmedium, editable = 
                     </TouchableOpacity>
                 </View>
             )}
-            {/* {editable && (
-                <View style={{ paddingHorizontal: indent * 2.5, alignSelf: 'flex-end' }}>
-                    <Text style={{ fontFamily: 'Curiousness', opacity: 0.6 }}>Max: 500 Characters</Text>
-                </View>
-            )} */}
+         
             {side === 'front' && (
                 <View style={theme.messageAreaFront}>
                     <TextInput
-                        style={[theme.textArea, { fontFamily: fonts[font], fontSize: fontSize }]}
+                        style={[theme.textArea, { fontFamily: font, fontSize: fontSize }]}
                         placeholder="Type..."
                         placeholderTextColor={theme.placeholder.color}
                         multiline
                         editable={editable}
                         maxLength={500}
                         ref={textRef}
-                        value={frontText}
                         disableFullscreenUI={true}
-                        onChangeText={(text) => setFrontText(text)}
                     />
 
                 </View>
@@ -53,7 +46,7 @@ const TextAreaBlock = ({ defaultSide, fontSize = fontSizes.xxmedium, editable = 
             {side === 'back' && (
                 <View style={theme.messageAreaBack}>
                     <TextInput
-                        style={[theme.textArea, { height: height, fontFamily: fonts[font], fontSize: fontSize }]}
+                        style={[theme.textArea, { height: height, fontFamily: font, fontSize: fontSize }]}
                         placeholder="Type..."
                         placeholderTextColor={theme.placeholder.color}
                         multiline

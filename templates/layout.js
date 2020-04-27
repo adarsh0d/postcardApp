@@ -13,16 +13,6 @@ const messageArea = {
     }]
 };
 
-const TextAreaBlock = {
-    containerType: 'KeyboardAvoidingView',
-    styleProps: {
-
-    },
-    options: {
-
-    },
-    children: [{ ...messageArea }]
-}
 
 const TextAreaBlock = {
     containerType: 'KeyboardAvoidingView',

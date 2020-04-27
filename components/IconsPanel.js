@@ -1,10 +1,11 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import { Text,View,TouchableOpacity, ImageBackground, FlatList} from 'react-native';
 
 import colors from '../styles/colors';
-
+import { ColorThemeContext } from '../AppContext';
 import { iconsUrls} from '../utils/consts';
-const IconsPanel = ({ setStampImage, theme }) => {
+const IconsPanel = () => {
+    const { theme, setStampImage } = useContext(ColorThemeContext);
     const renderIcon = ({ item }) => {
         return (
             <TouchableOpacity onPress={() => setStampImage(item.url)} style={{ margin: 5 }}>
@@ -14,8 +15,9 @@ const IconsPanel = ({ setStampImage, theme }) => {
         )
     }
     return (
-        <View style={{ borderTopWidth: 10, borderColor: colors.brownDarker }}>
-            <FlatList horizontal={true}
+        <View>
+            <FlatList
+                numColumns={6}
                 data={iconsUrls}
                 renderItem={renderIcon}
                 keyExtractor={(item, index) => index}

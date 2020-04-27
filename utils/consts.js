@@ -8,6 +8,8 @@ const letterBackgrounds = [
         localUrl: require('../assets/floral4.jpg'),
     }, {
         localUrl: require('../assets/floral5.jpg'),
+    }, {
+        localUrl: require('../assets/adventure.jpg'),
     },
 ]
 const imgBackgrounds = [
@@ -128,7 +130,26 @@ const foreGrounds = [
 const fonts = [
     'Bajorelle',
     'Charmelade',
-    'Rembank'
+    'Rembank',
+    'CongratsScript',
+    'HighTide',
+    'Yellowtail',
+    'Roboto',
+    'monospace',
+
+    'notoserif',
+
+    'sans-serif',
+
+    'sans-serif-light',
+
+    'sans-serif-thin',
+
+    'sans-serif-condensed',
+
+    'sans-serif-medium',
+
+    'serif',
 ]
 
 export { fonts, foreGrounds, iconsUrls, letterBackgrounds, imgBackgrounds }

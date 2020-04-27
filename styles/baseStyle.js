@@ -87,7 +87,6 @@ const baseStyle = (fontColor = colors.black, borderColor = colors.darkBrown) => 
             fontFamily: "Curiousness"
         },
         textArea: {
-            fontSize: 30,
             textAlign: 'left',
             alignSelf: 'flex-start',
             fontFamily: 'BottleParty',
@@ -157,9 +156,8 @@ const baseStyle = (fontColor = colors.black, borderColor = colors.darkBrown) => 
             alignSelf: 'flex-end',
             marginRight: indent / 2,
             alignItems: 'center',
-            justifyContent: 'center',
             textAlign: 'center',
-            paddingVertical: verticalIndent,
+            paddingVertical: halfVerticalIndent / 2,
             borderWidth: 1,
             borderColor: colors.brownDarker,
             width: indent * 5.5
@@ -180,17 +178,18 @@ const baseStyle = (fontColor = colors.black, borderColor = colors.darkBrown) => 
         messageAreaFront: {
             alignSelf: 'flex-start',
             paddingHorizontal: halfVerticalIndent,
-            paddingVertical: verticalIndent,
+            paddingVertical: halfVerticalIndent,
             width: '100%',
         },
         messageAreaBack: {
             alignSelf: 'flex-start',
         },
         stampImage: {
-            width: indent * 4,
-            height: indent * 4,
+            width: indent * 3,
+            height: indent * 3,
             alignItems: 'center',
             justifyContent: 'center',
+            borderRadius: 5
         },
         stampList: {
             fontFamily: 'Curiousness',

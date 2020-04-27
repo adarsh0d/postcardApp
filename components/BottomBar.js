@@ -6,24 +6,13 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { indent, } from '../styles/dimensions';
 import { ColorThemeContext } from '../AppContext';
 import { useNavigation } from '@react-navigation/native';
-const BottomBar = ({
-    setFontSize,
-    setReset,
-    showForegrounds,
-    showColors,
-    showBackgrounds,
-    rotateFonts,
-    snapshot,
-    fontSize,
-    showBorderColors,
-    hideAllPanels,
-}) => {
-    const theme = useContext(ColorThemeContext);
+const BottomBar = () => {
+    const { theme, setFontSize, snapshot } = useContext(ColorThemeContext);
     const { navigate }  = useNavigation();
     return (
         <View style={theme.bottomBar}>
             <View style={[theme.bottomLeftBar]}>
-                <TouchableOpacity style={theme.option} onPress={rotateFonts}>
+                <TouchableOpacity style={theme.option} onPress={() => navigate('Fonts')}>
                     <MaterialCommunityIcons style={theme.optionIcon} name="format-text" size={indent * 1.8} ></MaterialCommunityIcons>
                     <Text style={theme.optionText}>Font Style</Text>
                 </TouchableOpacity>
@@ -42,38 +31,30 @@ const BottomBar = ({
                     <MaterialCommunityIcons style={theme.optionIcon} name="palette" size={indent * 1.8} ></MaterialCommunityIcons>
                     <Text style={theme.optionText}>Font Color</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={theme.option} onPress={() => {
-                    hideAllPanels();
-                    showBorderColors()
-                }}>
+                <TouchableOpacity style={theme.option} onPress={() => navigate('Border Color')}>
                     <MaterialCommunityIcons style={theme.optionIcon} name="border-all-variant" size={indent * 1.8} ></MaterialCommunityIcons>
-                    <Text style={theme.optionText}>Border</Text>
+                    <Text style={theme.optionText}>Border Color</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={theme.option} onPress={() => setFontSize(fontSize - 4)}>
+                <TouchableOpacity style={theme.option} onPress={() => setFontSize(4)}>
+                    <MaterialCommunityIcons style={theme.optionIcon} name="format-font-size-increase" size={indent * 1.8} ></MaterialCommunityIcons>
+                    <Text style={theme.optionText}>Increase Font Size</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={theme.option} onPress={() => setFontSize(-4)}>
                     <MaterialCommunityIcons style={theme.optionIcon} name="format-font-size-decrease" size={indent * 1.8} ></MaterialCommunityIcons>
-                    <Text style={theme.optionText}>Font Size</Text>
+                    <Text style={theme.optionText}>Decrease Font Size</Text>
                 </TouchableOpacity>
 
-
+                <TouchableOpacity style={theme.option} onPress={() => navigate('Stamps')}>
+                    <MaterialCommunityIcons style={theme.optionIcon} name="stamper" size={indent * 1.8} ></MaterialCommunityIcons>
+                    <Text style={theme.optionText}>Stamps</Text>
+                </TouchableOpacity>
             </View>
-            {/*<View style={theme.bottomMiddleBar}>
-                <View style={theme.tabs}>
-                    <TouchableOpacity onPress={() => {
-                        setImageCard(false)
-                    }} style={[theme.tab, { borderBottomWidth: imageCard === false ? 5 : 1 }]}>
-                        <Text style={{ fontFamily: 'Curiousness', }}>Letter Card</Text>
-                    </TouchableOpacity>
-                    {/* <TouchableOpacity onPress={() => { setImageCard(true) }}
-                        style={[theme.tab, { borderBottomWidth: imageCard === true ? 5 : 1 }]}>
-                        <Text style={{ fontFamily: 'Curiousness', }}>Image Card</Text>
-                    </TouchableOpacity>
-                </View>
-            </View>*/}
-            <View style={[theme.bottomRightBar, { marginVertical: 40, flexDirection: 'row' }]}>
+           
+            <View style={[theme.bottomRightBar, { marginVertical: 40, justifyContent: 'center', flexDirection: 'row' }]}>
 
-                <TouchableOpacity onPress={() => setReset(false)} style={theme.button}>
+                {/* <TouchableOpacity onPress={() => setReset(false)} style={theme.button}>
                     <Text style={{ fontFamily: 'Curiousness', }}>Reset</Text>
-                </TouchableOpacity>
+                </TouchableOpacity> */}
                 <TouchableOpacity onPress={snapshot} style={theme.button}>
                     <Text style={{ fontFamily: 'Curiousness', }}>Share</Text>
                 </TouchableOpacity>

@@ -1,15 +1,27 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { Text, View, TouchableOpacity, Keyboard, TextInput as Input, ImageBackground, FlatList, KeyboardAvoidingView } from 'react-native';
+import { Text, View, TouchableOpacity, Keyboard, TextInput as Input, Image, ScrollView, FlatList, KeyboardAvoidingView } from 'react-native';
 import { ColorThemeContext } from '../AppContext';
 import colors from '../styles/colors';
-const ImagePanel = ({ setStampImage, foreGround = false, close, staticImages }) => {
+import { Dimensions } from 'react-native';
+import { halfVerticalIndent, indent, verticalIndent } from '../styles/dimensions';
+import { MaterialIcons } from '@expo/vector-icons';
+const { width, height } = Dimensions.get('window');
 
-    const theme = useContext(ColorThemeContext);
+import { letterBackgrounds } from '../utils/consts';
+const ImagePanel = ({ foreGround = false, close, staticImages }) => {
+    const [pageNo, setPageNo] = useState(1);
+    const { theme, setBackgroundImage } = useContext(ColorThemeContext);
     const [images, setRemoteImages] = useState([])
-    const [localImages, setLocalImages] = useState(staticImages)
+    const [localImages, setLocalImages] = useState(letterBackgrounds)
     const [searchText, setSearchText] = useState('')
     const search = async () => {
-        const response = await fetch('https://api.pexels.com/v1/search?query=' + searchText + '&per_page=15&page=1', {
+        let searchTerm = ''
+        if(!searchText) {
+            searchTerm = 'Old Paper';
+        } else {
+            searchTerm = searchText
+        }
+        const response = await fetch('https://api.pexels.com/v1/search?query=' + searchTerm + '&per_page=100&page='+pageNo, {
             method: 'GET',
             headers: {
                 Authorization: '563492ad6f9170000100000103288f085b2f42d0849779503bab972b'
@@ -20,10 +32,21 @@ const ImagePanel = ({ setStampImage, foreGround = false, close, staticImages }) 
             await setRemoteImages(result.photos);
         }
     };
+    const setPrevPage = () => {
+        if(pageNo !=1) {
+            setPageNo(pageNo - 1);
+            search()
+        }
+    }
+    const setNextPage = () => {
+            setPageNo(pageNo + 1);
+            search()
+    }
+    const imagewidth = (width - (halfVerticalIndent / 2) * 2) / 4;
     useEffect(() => {
         (async () => {
             const searchTerm = foreGround ? 'Pattern' : 'Old Paper';
-            const response = await fetch('https://api.pexels.com/v1/search?query=' + searchTerm + '&per_page=15&page=1', {
+            const response = await fetch('https://api.pexels.com/v1/search?query=' + searchTerm + '&per_page=100&page='+pageNo, {
                 method: 'GET',
                 headers: {
                     Authorization: '563492ad6f9170000100000103288f085b2f42d0849779503bab972b'
@@ -38,64 +61,71 @@ const ImagePanel = ({ setStampImage, foreGround = false, close, staticImages }) 
     const renderIcon = ({ item }) => {
         if (item.localUrl) {
             return (
-                <TouchableOpacity onPress={() => setStampImage(item.localUrl)} style={{ margin: 5 }}>
-                    <ImageBackground source={item.localUrl} imageStyle={{ resizeMode: 'contain' }} style={theme.stampImage}>
-                    </ImageBackground>
+                <TouchableOpacity onPress={() => setBackgroundImage(item.localUrl)} style={{ marginHorizontal: 2, marginBottom: 2 }}>
+                    <Image source={item.localUrl} imageStyle={{ resizeMode: 'cover' }} style={{ marginHorizontal: halfVerticalIndent / 6, marginBottom: 2, height: imagewidth, width: imagewidth }}>
+                    </Image>
                 </TouchableOpacity>
             )
         } else if (!item.localUrl) {
             return (
-                <TouchableOpacity onPress={() => setStampImage({ uri: item.src.landscape })} style={{ margin: 5 }}>
-                    <ImageBackground source={{ uri: item.src.tiny }} imageStyle={{ resizeMode: 'contain' }} style={theme.stampImage}>
-                    </ImageBackground>
+                <TouchableOpacity onPress={() => setBackgroundImage({ uri: item.src.landscape })} style={{}}>
+                    <Image source={{ uri: item.src.tiny }} imageStyle={{ resizeMode: 'cover' }} style={{ marginHorizontal: halfVerticalIndent / 6, marginBottom: 2, height: imagewidth, width: imagewidth }}>
+                    </Image>
                 </TouchableOpacity>
             )
         }
     }
     return (
-        <View style={{ borderTopWidth: 1, backgroundColor: '#fff', borderColor: colors.brownDarker }}>
-            <View style={{ flexDirection: 'row' }}>
-                <FlatList horizontal={true}
-                    data={localImages}
+        <View style={{flex: 1}}>          
+            <View style={{ flex:1 }}>
+                <View style={{
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    width: '100%',
+                    paddingVertical: halfVerticalIndent,
+                    paddingHorizontal: halfVerticalIndent /2
+                }}>
+                    <KeyboardAvoidingView style={{
+                        flexDirection: 'row',
+                    }}>
+                        <Input placeholder="Search Gallery"
+                            onChangeText={(text) => setSearchText(text)}
+                            disableFullscreenUI={true}
+                            style={{
+                                alignItems: 'center',
+                                borderRadius: 20,
+                                borderWidth: 1,
+                                borderColor: colors.darkGrey,
+                                fontFamily: 'Curiousness',
+                                alignSelf: 'flex-start',
+                                color: '#000',
+                                width: width / 2,
+                                paddingHorizontal: 10,
+                                backgroundColor: '#ffffff'
+                            }}
+                        />
+                        <TouchableOpacity onPress={() => { Keyboard.dismiss(); search() }} style={[theme.button, theme.icon, { alignSelf: "flex-start" }]}>
+                            <Text style={{ fontFamily: 'Curiousness', }}>Search</Text>
+                        </TouchableOpacity>
+
+                    </KeyboardAvoidingView>
+                    <View style={{ flexDirection: 'row'}}>
+                        <TouchableOpacity onPress={() => { setPrevPage()}} style={[theme.icon, { width: 'auto' }]}>
+                            <MaterialIcons name="navigate-before" size={indent * 1.8}></MaterialIcons>
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={() => { setNextPage() }} style={[theme.icon, { width: 'auto' }]}>
+                            <MaterialIcons name="navigate-next" size={indent * 1.8}></MaterialIcons>
+                        </TouchableOpacity>
+                    </View>
+                </View>
+                <FlatList
+                    numColumns={4}
+                    data={images}
                     renderItem={renderIcon}
                     keyExtractor={(item, index) => index}
                     ListEmptyComponent={<Text>Fetching</Text>}
                 ></FlatList>
-                <TouchableOpacity onPress={() => close()} style={[theme.button, theme.icon, { alignSelf: "flex-start", marginVertical: 5 }]}>
-                    <Text style={{ fontFamily: 'Curiousness', }}>Close</Text>
-                </TouchableOpacity>
             </View>
-            <View style={{ borderBottomWidth: 1, borderBottomColor: colors.brownDarker, marginHorizontal: 10 }}></View>
-            <KeyboardAvoidingView style={{
-                flexDirection: 'row',
-                marginHorizontal: 10,
-                marginVertical: 5, justifyContent: 'flex-start'
-            }}>
-                <Input placeholder="Search Backgrounds"
-                    onChangeText={(text) => setSearchText(text)}
-                    disableFullscreenUI={true}
-                    style={{
-                        alignItems: 'center',
-                        borderRadius: 4,
-                        borderWidth: 1,
-                        borderColor: colors.darkGrey,
-                        fontFamily: 'Curiousness',
-                        alignSelf: 'flex-start',
-                        color: '#000',
-                        paddingHorizontal: 10,
-                        backgroundColor: '#ffffff'
-                    }}
-                />
-                <TouchableOpacity onPress={() => { Keyboard.dismiss(); search() }} style={[theme.button, theme.icon, { alignSelf: "flex-start" }]}>
-                    <Text style={{ fontFamily: 'Curiousness', }}>Search</Text>
-                </TouchableOpacity>
-            </KeyboardAvoidingView>
-            <FlatList horizontal={true}
-                data={images}
-                renderItem={renderIcon}
-                keyExtractor={(item, index) => index}
-                ListEmptyComponent={<Text>Fetching</Text>}
-            ></FlatList>
         </View>
     )
 }

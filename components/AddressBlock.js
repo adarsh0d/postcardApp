@@ -1,8 +1,7 @@
 
 import React, {useRef, useState} from 'react';
 import { TextInput, View, } from 'react-native';
-import { fonts} from '../utils/consts';
-const AddressBlock = ({ font, theme, editable = true, disableFullscreenUI = true }) => {
+const AddressBlock = ({ font, theme, editable = true, disableFullscreenUI = true }) => {    
     const refs = {
         addressLine1: useRef(null),
         addressLine2: useRef(null),
@@ -30,7 +29,7 @@ const AddressBlock = ({ font, theme, editable = true, disableFullscreenUI = true
             <View style={theme.addressBox}>
                 <TextInput
 
-                    style={[theme.addressBoxInput, { fontFamily: fonts[font] }]}
+                    style={[theme.addressBoxInput, { fontFamily: font }]}
                     placeholderTextColor={theme.placeholder.color}
                     disableFullscreenUI={disableFullscreenUI}
                     editable={editable}
@@ -45,7 +44,7 @@ const AddressBlock = ({ font, theme, editable = true, disableFullscreenUI = true
             </View>
             <View style={theme.addressBox}>
                 <TextInput
-                    style={[theme.addressBoxInput, { fontFamily: fonts[font] }]}
+                    style={[theme.addressBoxInput, { fontFamily: font }]}
                     placeholderTextColor={theme.placeholder.color}
                     disableFullscreenUI={disableFullscreenUI}
                     editable={editable}
@@ -59,7 +58,7 @@ const AddressBlock = ({ font, theme, editable = true, disableFullscreenUI = true
             </View>
             <View style={theme.addressBox}>
                 <TextInput
-                    style={[theme.addressBoxInput, { fontFamily: fonts[font] }]}
+                    style={[theme.addressBoxInput, { fontFamily: font }]}
                     placeholderTextColor={theme.placeholder.color}
                     disableFullscreenUI={disableFullscreenUI}
                     editable={editable}
@@ -73,7 +72,7 @@ const AddressBlock = ({ font, theme, editable = true, disableFullscreenUI = true
             </View>
             <View style={theme.pinBlock}>
                 <TextInput
-                    style={[theme.pinBox, { fontFamily: fonts[font] }]}
+                    style={[theme.pinBox, { fontFamily: font }]}
                     placeholderTextColor={theme.placeholder.color}
                     keyboardType="numeric"
                     maxLength={1}
@@ -90,7 +89,7 @@ const AddressBlock = ({ font, theme, editable = true, disableFullscreenUI = true
                     }}
                 />
                 <TextInput
-                    style={[theme.pinBox, { fontFamily: fonts[font] }]}
+                    style={[theme.pinBox, { fontFamily: font }]}
                     placeholderTextColor={theme.placeholder.color}
                     ref={refs['pin2']}
                     keyboardType="numeric"
@@ -109,7 +108,7 @@ const AddressBlock = ({ font, theme, editable = true, disableFullscreenUI = true
                     }}
                 />
                 <TextInput
-                    style={[theme.pinBox, { fontFamily: fonts[font] }]}
+                    style={[theme.pinBox, { fontFamily: font }]}
                     placeholderTextColor={theme.placeholder.color}
                     keyboardType="numeric"
                     returnKeyType="next"
@@ -126,7 +125,7 @@ const AddressBlock = ({ font, theme, editable = true, disableFullscreenUI = true
                     }}
                 />
                 <TextInput
-                    style={[theme.pinBox, { fontFamily: fonts[font] }]}
+                    style={[theme.pinBox, { fontFamily: font }]}
                     placeholderTextColor={theme.placeholder.color}
                     keyboardType="numeric"
                     returnKeyType="next"
@@ -143,7 +142,7 @@ const AddressBlock = ({ font, theme, editable = true, disableFullscreenUI = true
                     }}
                 />
                 <TextInput
-                    style={[theme.pinBox, { fontFamily: fonts[font] }]}
+                    style={[theme.pinBox, { fontFamily: font }]}
                     placeholderTextColor={theme.placeholder.color}
                     keyboardType="numeric"
                     returnKeyType="next"
@@ -160,7 +159,7 @@ const AddressBlock = ({ font, theme, editable = true, disableFullscreenUI = true
                     }}
                 />
                 <TextInput
-                    style={[theme.pinBox, { fontFamily: fonts[font] }]}
+                    style={[theme.pinBox, { fontFamily: font }]}
                     placeholderTextColor={theme.placeholder.color}
                     keyboardType="numeric"
                     disableFullscreenUI={disableFullscreenUI}

@@ -18,6 +18,12 @@ export default function App() {
     'Curiousness': require('./assets/fonts/Curiousness.otf'),
     'BlackSingature': require('./assets/fonts/BlackSingature.ttf'),
     'Rembank': require('./assets/fonts/Rembank.otf'),
+    'Caveat': require('./assets/fonts/Caveat-Regular.ttf'),
+    'CaveatBold': require('./assets/fonts/Caveat-Bold.ttf'),
+    'CongratsScript': require('./assets/fonts/CongratsScript-TTF.ttf'),
+    'HighTide': require('./assets/fonts/HighTide-Demo.ttf'),
+    'QueenGladys': require('./assets/fonts/QueenGladys-Regular.ttf'),
+    'Yellowtail': require('./assets/fonts/Yellowtail-Regular.ttf'),
   });
   if (!fontsLoaded) {
     return <AppLoading />;

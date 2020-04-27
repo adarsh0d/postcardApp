@@ -1,23 +1,26 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useReducer } from 'react';
 import { ImageBackground, Text, StyleSheet, TextInput, ScrollView, View, } from 'react-native';
 
-import { captureRef } from 'react-native-view-shot';
-import * as Sharing from 'expo-sharing';
-import * as ImageManipulator from "expo-image-manipulator";
 import { createStackNavigator } from '@react-navigation/stack';
-
+import {captureRef} from 'react-native-view-shot';
+import * as Sharing from 'expo-sharing';
 import colors from '../styles/colors';
 import baseStyle from '../styles/baseStyle';
 import { moderateScale } from '../styles/scalingUtils';
 
-import { fonts, foreGrounds, letterBackgrounds, imgBackgrounds } from '../utils/consts';
+import { letterBackgrounds, fonts } from '../utils/consts';
+import AddressBlock from '../components/AddressBlock';
+import TextAreaBlock from '../components/TextAreaBlock';
+import StampArea from '../components/StampsArea';
 import BottomBar from '../components/BottomBar'
 import IconsPanel from '../components/IconsPanel';
-import ImagePanel from '../components/ImagePanel';
-import ColorsPanel from '../components/colorsPanel';
+import BackgroundScreen from './BackgroundScreen';
+import { ColorThemeContext } from '../AppContext';
 import { Pallet, BorderPallet } from '../utils/pallet';
-import { ColorThemeContext } from '../AppContext'
-import Letter from '../templates/postcards/letter1';
+import BorderColors from './BorderColors';
+import FontColors from './FontColors';
+import FontStyles from './FontStyles';
+
 const Stack = createStackNavigator();
 const themesStyleSheets = (fontColor, borderColor) => {
     return {
@@ -106,100 +109,83 @@ const themesStyleSheets = (fontColor, borderColor) => {
     }
 };
 
-
-
-
 const themes = ['light', 'dark'];
 export default HomeScreen = () => {
-
-    const [font, setFont] = useState(0);
-    const [theme, setTheme] = useState(themes[0]);
-    const [fontSize, setFontSize] = useState(moderateScale(16));
-    const [backgroundCount, setBackground] = useState(0);
-    const [foregroundCount, setForeground] = useState(0);
-    const [showStamp, setShowStamp] = useState(true);
-    const [showStamps, setShowStamps] = useState(false);
-    const [showImages, setShowImages] = useState(false);
-    const [showForeGroundImages, setShowForeGroundImages] = useState(false);
-    const [stampImage, setStampImage] = useState(null);
- 
-    const [showHeader, setShowHeader] = useState(true);
-    const [showPrint, setShowPreview] = useState(false);
-    const [imageCard, setCardType] = useState(false);
-    const [fontColor, setFontColor] = useState(Pallet.flat()[0])
-    const [borderColor, setBorderColor] = useState(BorderPallet.flat()[0])
-    const [showColors, setShowColors] = useState(false);
-    const [showBorderColors, setShowBorderColors] = useState(false);
-    const [showTitle, setToggleTitle] = useState(true);
-    const toggleSwitch = () => setIsEnabled(previousState => !previousState);
-    const snapshot = async () => {
-        captureRef(printRef, {
-            format: "png",
-            quality: 1,
-            width: 1600,
-            height: 800
-        }).then(
-            async (uri) => {
-                const sharingAvailable = await Sharing.isAvailableAsync();
-                if (sharingAvailable) {
-                    const manipResult = await ImageManipulator.manipulateAsync(
-                        uri,
-                    );
-                    Sharing.shareAsync(uri);
-                }
-            },
-            error => console.error("Oops, snapshot failed", error)
-        );
-
-
-    }
-    const setReset = () => {
-
-    }
-    const setImageCard = (val) => {
-        setCardType(val);
-        setBackground(0);
-        if (val) {
-            setFontSize(60)
-            setFont(1);
-            setTheme(themes[1]);
-        } else {
-            setFont(0)
-            setFontSize(30);
-            setTheme(themes[0]);
+    const [state, dispatch] = React.useReducer(
+        (prevState, action) => {
+            switch (action.type) {
+                case 'SET_FONT_FAMILY':
+                    return {
+                        ...prevState,
+                        font: action.payload,
+                    };
+                case 'SET_BACKGROUND':
+                    return {
+                        ...prevState,
+                        backgroundImage: action.payload,
+                    };
+                case 'SET_FONT_SIZE':
+                    return {
+                        ...prevState,
+                        fontSize: prevState.fontSize + action.payload,
+                    };
+                case 'SET_FONT_COLOR':
+                    return {
+                        ...prevState,
+                        fontColor: action.payload
+                    };
+                case 'SET_BORDER_COLOR':
+                    return {
+                        ...prevState,
+                        borderColor: action.payload
+                    };
+                case 'SET_STAMP_IMAGE':
+                    return {
+                        ...prevState,
+                        stampImage: action.payload
+                    };
+                case 'SET_FONT_STYLE':
+                    return {
+                        ...prevState,
+                        font: action.payload
+                    };
+                case 'SET_BACKGROUND_COLOR':
+                    return {
+                        ...prevState,
+                        backgroundColor: action.payload,
+                        backgroundImage: ''
+                    }
+                case 'SET_BACKGROUND_FILM':
+                    return {
+                        ...prevState,
+                        alpha: action.payload,
+                    }
+                case 'SIGN_OUT':
+                    return {
+                        ...prevState,
+                        isSignout: true,
+                        userToken: null,
+                    };
+            }
+        },
+        {
+            backgroundImage: letterBackgrounds[0].localUrl,
+            font: fonts[0],
+            fontSize: moderateScale(16),
+            stampImage: null,
+            fontColor: Pallet.flat()[0],
+            borderColor: BorderPallet.flat()[0],
+            alpha: 0,
+            backgroundColor: 'none'
         }
-    }
-    useEffect(() => {
-        //ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE);
-    })
-    const preview = () => {
-        setShowPreview(true);
-    }
+    );
+    const [theme, setTheme] = useState(themes[0]);
+
+
 
     const printRef = useRef(null);
 
-    const rotateFonts = () => {
-        if (font + 1 > fonts.length) {
-            setFont(0);
-        } else {
-            setFont(font + 1);
-        }
-    }
-    const showBackgrounds = () => {
-        const backgroundsToCheck = theme === 'light' ? letterBackgrounds : imgBackgrounds;
-        if (backgroundCount + 1 < backgroundsToCheck.length) {
-            setBackground(backgroundCount + 1);
-        } else {
-            setBackground(0);
-        }
-    }
-    const showForegrounds = () => {
-        if (foregroundCount + 1 < imgBackgrounds.length) {
-            setForeground(foregroundCount + 1);
-        } else {
-            setForeground(0);
-        }
-    }
+
     const turnSide = (val) => {
         if (val === 'front') {
             setShowHeader(true);
@@ -207,81 +193,119 @@ export default HomeScreen = () => {
             setShowHeader(false);
         }
     }
-    const selectedTheme = themesStyleSheets(fontColor, borderColor)[theme];
+    const selectedTheme = themesStyleSheets(state.fontColor, state.borderColor)[theme];
 
+    const homepageContext = React.useMemo(
+        () => ({
+            theme: selectedTheme,
+            fontColor: state.fontColor,
+            borderColor: state.borderColor,
+            font: state.font,
+            stampImage: state.stampImage,
+            backgroundColor: state.backgroundColor,
+            alpha: state.alpha,
+            setBackgroundImage: async data => {
+                dispatch({ type: 'SET_BACKGROUND', payload: data });
+            },
+            setFontSize: async data => {
+                dispatch({ type: 'SET_FONT_SIZE', payload: data });
+            },
+            setFontColor: async data => {
+                dispatch({ type: 'SET_FONT_COLOR', payload: data });
+            },
+            setBorderColor: async data => {
+                dispatch({ type: 'SET_BORDER_COLOR', payload: data });
+            },
+            setStampImage: async data => {
+                dispatch({ type: 'SET_STAMP_IMAGE', payload: data });
+            },
+            setFontStyle: async data => {
+                dispatch({ type: 'SET_FONT_STYLE', payload: data });
+            },
+            setBackgroundColor: async data => {
+                dispatch({ type: 'SET_BACKGROUND_COLOR', payload: data });
+            },
+            setBackgroundAlpha: async data => {
+                dispatch({ type: 'SET_BACKGROUND_FILM', payload: data });
+            },
+            snapshot: async => {
+                captureRef(printRef, {
+                    format: "png",
+                    quality: 1,
+                    width: 1600,
+                    height: 800
+                }).then(
+                    async (uri) => {
+                        const sharingAvailable = await Sharing.isAvailableAsync();
+                        if (sharingAvailable) {
+                            // const manipResult = await ImageManipulator.manipulateAsync(
+                            //     uri,
+                            // );
+                            Sharing.shareAsync(uri);
+                        }
+                    })
+            }
+        }),
+        [
+            state.fontColor,
+            state.borderColor,
+            state.stampImage,
+            state.backgroundColor,
+            state.alpha
+        ]
+    );
 
     return (
-        <ColorThemeContext.Provider value={selectedTheme}>
+        <ColorThemeContext.Provider value={homepageContext}>
             <View style={selectedTheme.container}>
-                <View style={selectedTheme.backgroundContainer} ref={printRef}>
-                   <Letter></Letter>
+                <View style={selectedTheme.backgroundContainer}>
+                    <ImageBackground ref={printRef} source={state.backgroundImage} imageStyle={{ resizeMode: 'cover' }} style={[selectedTheme.backGround, { backgroundColor: state.backgroundColor }]}>
+                        <View style={[selectedTheme.cardContainer, { backgroundColor: `rgba(0, 0, 0, ${state.alpha})` }]}>
+                            <View style={selectedTheme.cardLeft}>
+                                <TextAreaBlock theme={selectedTheme} fontSize={state.fontSize} font={state.font} setSideBlock={(val) => turnSide(val)}></TextAreaBlock>
+                            </View>
+                            <View style={selectedTheme.cardRight}>
+                                <View style={selectedTheme.cardHeader}>
+                                    <View style={selectedTheme.cardTitle}>
+                                        {theme === 'light' && (
+                                            <TextInput
+                                                disableFullscreenUI={true}
+                                                style={selectedTheme.cardText}
+                                                defaultValue="POST-CARD"
+                                                underlineColorAndroid="transparent"
+                                            />
+                                        )}
+                                        <Text style={selectedTheme.extraBorder}></Text>
+                                    </View>
+
+                                    <View style={selectedTheme.cardStamp}>
+                                        <StampArea theme={selectedTheme} stampImage={state.stampImage} showText={false}></StampArea>
+                                    </View>
+                                </View>
+                                <View style={selectedTheme.addressBlock}>
+                                    <AddressBlock theme={selectedTheme} editable={true} setParentAddress={(val) => setAddress(val)} font={state.font}></AddressBlock>
+                                </View>
+                            </View>
+                        </View>
+                    </ImageBackground>
                 </View>
 
-                {showStamps && (
-                    <IconsPanel theme={selectedTheme} setStampImage={(icon) => {
-                        setStampImage(icon)
-                        setShowStamps(!showStamps)
-                    }
 
-                    }></IconsPanel>
-                )}
-                {showImages && (
-                    <ImagePanel staticImages={letterBackgrounds} theme={selectedTheme} setStampImage={(icon) => {
-                        setBackgroundImage(icon)
-                        setShowImages(!showImages)
-                    }
-
-                    } close={() => setShowImages(!showImages)}></ImagePanel>
-                )}
-                {showForeGroundImages && (
-                    <ImagePanel staticImages={imgBackgrounds} foreGround={true} theme={selectedTheme} setStampImage={(icon) => {
-                        setForeGroundImage(icon)
-                        setShowForeGroundImages(!showForeGroundImages)
-                    }
-
-                    } close={() => setShowForeGroundImages(!showForeGroundImages)}></ImagePanel>
-                )}
-                {showColors && (
-                    <ColorsPanel theme={selectedTheme} pallet={Pallet} selectedColor={fontColor} setSelectedColor={(color) => {
-                        setFontColor(color)
-                        setShowColors(!showColors)
-                    }
-
-                    } close={() => setShowColors(!showColors)}></ColorsPanel>
-                )}
-                {showBorderColors && (
-                    <ColorsPanel theme={selectedTheme} pallet={BorderPallet} selectedColor={borderColor} setSelectedColor={(color) => {
-                        setBorderColor(color)
-                        setShowBorderColors(!showBorderColors)
-                    }
-
-                    } close={() => setShowBorderColors(!showBorderColors)}></ColorsPanel>
-                )}
                 <Stack.Navigator>
                     <Stack.Screen name="Actions" component={BottomBar} />
-                    <Stack.Screen name="Background" component={ImagePanel} />
-                    <Stack.Screen name="Font Color" component={ColorsPanel} />
+                    <Stack.Screen name="Fonts" component={FontStyles} />
+                    <Stack.Screen name="Background" component={BackgroundScreen}
+                        initialParams={{ pallet: Pallet }} />
+                    <Stack.Screen name="Font Color" component={FontColors}
+                        initialParams={{ pallet: Pallet }}
+                    />
+                    <Stack.Screen name="Border Color" component={BorderColors}
+                        initialParams={{ pallet: BorderPallet }}
+                    />
+                    <Stack.Screen name="Stamps" component={IconsPanel}
+                    />
                 </Stack.Navigator>
-                {/* <BottomBar                   
-                    imageCard={imageCard}
-                    setImageCard={(val) => setImageCard(val)}
-                    fontSize={fontSize}
-                    setFontSize={(fontSize) => setFontSize(fontSize)}
-                    setReset={() => setReset()}
-                    showForegrounds={() => setShowForeGroundImages(!showForeGroundImages)}
-                    showBackgrounds={() => setShowImages(!showImages)}
-                    rotateFonts={() => rotateFonts()}
-                    snapshot={() => snapshot()}
-                    showBorderColors={() => setShowBorderColors(!showBorderColors)}
-                    showColors={() => setShowColors(!showColors)}
-                    hideAllPanels={() => hideAllPanels()}
-                    toggleStamp={() => setShowStamp(!showStamp)}
-                    showStamp={showStamp}
-                    toggleTitle={() => setToggleTitle(!showTitle)}
-                    showTitle={showTitle}
-                >
 
-                </BottomBar> */}
             </View>
         </ColorThemeContext.Provider>
     )
