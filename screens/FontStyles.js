@@ -8,6 +8,7 @@ import { fonts} from '../utils/consts';
 
 const FontStyles = ({ setSelectedColor, pallet, selectedColor }) => {
     const { theme, setFontStyle } = useContext(ColorThemeContext);
+    
     const renderFont = ({ item }) => {
         return (
             <View>

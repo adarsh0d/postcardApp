@@ -98,7 +98,7 @@ const ImagePanel = ({ foreGround = false, }) => {
             )
         } else if (!item.localUrl) {
             return (
-                <TouchableOpacity onPress={() => setBackgroundImage({ uri: item.src.landscape })} style={{}}>
+                <TouchableOpacity onPress={() => setBackgroundImage({ uri: item.src.large })} style={{}}>
                     <Image source={{ uri: item.src.tiny }} imageStyle={{ resizeMode: 'cover' }} style={{ marginHorizontal: halfVerticalIndent / 6, marginBottom: 2, height: imagewidth, width: imagewidth }}>
                     </Image>
                 </TouchableOpacity>

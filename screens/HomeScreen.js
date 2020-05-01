@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect, useReducer } from 'react';
-import { ImageBackground, Text, StyleSheet, TextInput, TouchableOpacity, View, AsyncStorage, } from 'react-native';
+import { ImageBackground, Text, StyleSheet, TextInput, Dimensions, ScrollView, TouchableOpacity, View, AsyncStorage, } from 'react-native';
 
 import { createStackNavigator } from '@react-navigation/stack';
 import { captureRef } from 'react-native-view-shot';
@@ -20,11 +20,11 @@ import { Pallet, BorderPallet } from '../utils/pallet';
 import BorderColors from './BorderColors';
 import FontColors from './FontColors';
 import FontStyles from './FontStyles';
-
+const { width, height } = Dimensions.get('window');
 const Stack = createStackNavigator();
-const themesStyleSheets = (fontColor, borderColor) => {
+const themesStyleSheets = (fontColor, borderColor, aspectRatio) => {
     return {
-        light: StyleSheet.create(baseStyle(fontColor, borderColor)),
+        light: StyleSheet.create(baseStyle(fontColor, borderColor, aspectRatio)),
         dark: StyleSheet.create({
             ...baseStyle,
             container: {
@@ -126,6 +126,11 @@ export default HomeScreen = () => {
                         ...prevState,
                         font: action.payload,
                     };
+                case 'HIDE_ADDRESS':
+                    return {
+                        ...prevState,
+                        showAddress: action.payload,
+                    };
                 case 'SET_BACKGROUND':
                     return {
                         ...prevState,
@@ -188,19 +193,65 @@ export default HomeScreen = () => {
                         isSignout: true,
                         userToken: null,
                     };
+                case 'SET_SIZE':
+                    return {
+                        ...prevState,
+                        aspectRatio: action.payload
+                    };
+                case 'SET_FRONT_TEXT':
+                    return {
+                        ...prevState,
+                        frontText: action.payload
+                    };
+                case 'SET_ADDRESS':
+                    return {
+                        ...prevState,
+                        address: action.payload
+                    };
+                case 'RESET':
+                    return {
+                        ...prevState,
+                        frontText: '',
+                        address: {
+                            addressLine1: '',
+                            addressLine2: '',
+                            addressLine3: '',
+                            pin1: '',
+                            pin2: '',
+                            pin3: '',
+                            pin4: '',
+                            pin5: '',
+                            pin6: ''
+                        }
+                    }
             }
         },
         {
             backgroundImage: letterBackgrounds[0].localUrl,
             font: fonts[0],
-            fontSize: moderateScale(16),
+            fontSize: moderateScale(25),
             stampImage: null,
             fontColor: Pallet.flat()[0],
             borderColor: BorderPallet.flat()[0],
             alpha: 0,
             backgroundColor: 'none',
             showTitle: true,
-            showStamp: true
+            showStamp: true,
+            showAddress: true,
+            aspectRatio: [4, 3],
+            frontText: '',
+            address: {
+                addressLine1: '',
+                addressLine2: '',
+                addressLine3: '',
+                pin1: '',
+                pin2: '',
+                pin3: '',
+                pin4: '',
+                pin5: '',
+                pin6: ''
+            }
+
         }
 
     );
@@ -218,7 +269,7 @@ export default HomeScreen = () => {
             setShowHeader(false);
         }
     }
-    const selectedTheme = themesStyleSheets(state.fontColor, state.borderColor)[theme];
+    const selectedTheme = themesStyleSheets(state.fontColor, state.borderColor, state.aspectRatio)[theme];
 
     const homepageContext = React.useMemo(
         () => ({
@@ -231,6 +282,13 @@ export default HomeScreen = () => {
             alpha: state.alpha,
             showTitle: state.showTitle,
             showStamp: state.showStamp,
+            showAddress: state.showAddress,
+            aspectRatio: state.aspectRatio,
+            frontText: state.frontText,
+            address: state.address,
+            setSize: async data => {
+                dispatch({ type: 'SET_SIZE', payload: data });
+            },
             setBackgroundImage: async data => {
                 dispatch({ type: 'SET_BACKGROUND', payload: data });
             },
@@ -261,6 +319,19 @@ export default HomeScreen = () => {
             setShowTitle: async data => {
                 dispatch({ type: 'SET_SHOW_TITLE', payload: data });
             },
+            setShowAddress: async data => {
+                dispatch({ type: 'HIDE_ADDRESS', payload: data })
+            },
+            setAspectRatio: async data => {
+                dispatch({ type: 'SET_SIZE', payload: data })
+            },
+            setFrontText: async data => {
+                dispatch({ type: 'SET_FRONT_TEXT', payload: data })
+            },
+            setAddress: async data => {
+                dispatch({ type: 'SET_ADDRESS', payload: data })
+            }
+
 
         }),
         [
@@ -270,15 +341,19 @@ export default HomeScreen = () => {
             state.backgroundColor,
             state.alpha,
             state.showTitle,
-            state.showStamp
+            state.showStamp,
+            state.showAddress,
+            state.aspectRatio,
+            state.frontText,
+            state.address
         ]
     );
     const snapshot = async () => {
         captureRef(printRef, {
             format: "png",
             quality: 1,
-            width: 1600,
-            height: 800
+            width: width,
+            height: width * (state.aspectRatio[1] / state.aspectRatio[0])
         }).then(
             async (uri) => {
                 const sharingAvailable = await Sharing.isAvailableAsync();
@@ -293,14 +368,19 @@ export default HomeScreen = () => {
     const ShareButton = () => {
         return (
             <View style={[selectedTheme.bottomRightBar, { alignSelf: 'center', marginVertical: 10, justifyContent: 'center', flexDirection: 'row' }]}>
+                <TouchableOpacity onPress={() => { dispatch({ type: 'RESET' }) }} style={selectedTheme.button}>
+                    <Text style={{ fontFamily: 'Curiousness', }}>New</Text>
+                </TouchableOpacity>
                 <TouchableOpacity onPress={snapshot} style={selectedTheme.button}>
                     <Text style={{ fontFamily: 'Curiousness', }}>Share</Text>
                 </TouchableOpacity>
+
             </View>
         )
     }
     return (
         <ColorThemeContext.Provider value={homepageContext}>
+
             <View style={selectedTheme.container}>
                 <View style={selectedTheme.backgroundContainer}>
                     <ImageBackground ref={printRef} source={state.backgroundImage} imageStyle={{ resizeMode: 'cover' }} style={[selectedTheme.backGround, { backgroundColor: state.backgroundColor }]}>
@@ -308,32 +388,46 @@ export default HomeScreen = () => {
                             <View style={selectedTheme.cardLeft}>
                                 <TextAreaBlock theme={selectedTheme} fontSize={state.fontSize} font={state.font} setSideBlock={(val) => turnSide(val)}></TextAreaBlock>
                             </View>
-                            <View style={selectedTheme.cardRight}>
-                                <View style={selectedTheme.cardHeader}>
-                                    {state.showTitle && (
-                                        <View style={selectedTheme.cardTitle}>
-                                            {theme === 'light' && (
-                                                <TextInput
-                                                    disableFullscreenUI={true}
-                                                    style={[selectedTheme.cardText]}
-                                                    defaultValue="POST-CARD"
-                                                    underlineColorAndroid="transparent"
-                                                />
-                                            )}
-                                            <Text style={selectedTheme.extraBorder}></Text>
-                                        </View>
-                                    )}
-                                    {state.showStamp && (
-                                        <View style={selectedTheme.cardStamp}>
-                                            <StampArea theme={selectedTheme} stampImage={state.stampImage} showText={false}></StampArea>
+                            {(state.showAddress || state.showTitle || state.showStamp) && (
+                                <View style={selectedTheme.cardRight}>
+                                    <View style={selectedTheme.cardHeader}>
+                                        {state.showTitle && (
+                                            <View style={selectedTheme.cardTitle}>
+                                                {theme === 'light' && (
+                                                    <TextInput
+                                                        disableFullscreenUI={true}
+                                                        style={[selectedTheme.cardText]}
+                                                        defaultValue="POST-CARD"
+                                                        underlineColorAndroid="transparent"
+                                                    />
+                                                )}
+                                                <Text style={selectedTheme.extraBorder}></Text>
+                                            </View>
+                                        )}
+                                        {state.showStamp && (
+                                            <View style={selectedTheme.cardStamp}>
+                                                <StampArea theme={selectedTheme} stampImage={state.stampImage} showText={false}></StampArea>
+                                            </View>
+                                        )}
+                                    </View>
+                                    {state.showAddress && (
+
+                                        <View style={selectedTheme.addressBlock}>
+                                            <AddressBlock theme={selectedTheme} editable={true} setParentAddress={(val) => setAddress(val)} font={state.font}></AddressBlock>
                                         </View>
                                     )}
                                 </View>
-                                <View style={selectedTheme.addressBlock}>
-                                    <AddressBlock theme={selectedTheme} editable={true} setParentAddress={(val) => setAddress(val)} font={state.font}></AddressBlock>
-                                </View>
-                            </View>
+                            )}
                         </View>
+                        <View
+                            style={
+                                selectedTheme.logo
+                            }>
+                            <Text style={{
+                                transform: [{
+                                    rotate: '0deg',
+                                }], fontFamily: 'sans-serif-medium', textAlign: 'center', width: '100%', fontSize: 12, color: '#fff'
+                            }}>CHITTHI</Text></View>
                     </ImageBackground>
                 </View>
 
@@ -374,15 +468,16 @@ export default HomeScreen = () => {
                             )
                         }}
                     />
-                    <Stack.Screen name="Stamps" component={IconsPanel} options={{
+                    {/* <Stack.Screen name="Stamps" component={IconsPanel} options={{
                         headerRight: () => (
                             <ShareButton></ShareButton>
                         )
                     }}
-                    />
+                    /> */}
                 </Stack.Navigator>
 
             </View>
+
         </ColorThemeContext.Provider>
     )
 

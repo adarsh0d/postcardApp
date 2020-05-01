@@ -2,15 +2,7 @@
 const letterBackgrounds = [
     {
         localUrl: require('../assets/browntexture.jpg'),
-    }, {
-        localUrl: require('../assets/floral3.jpg'),
-    }, {
-        localUrl: require('../assets/floral4.jpg'),
-    }, {
-        localUrl: require('../assets/floral5.jpg'),
-    }, {
-        localUrl: require('../assets/adventure.jpg'),
-    },
+    }
 ]
 const imgBackgrounds = [
     {
@@ -121,10 +113,6 @@ const iconsUrls = [
 ]
 
 const foreGrounds = [
-    require('../assets/floral3.jpg'),
-    require('../assets/floral8.jpg'),
-    require('../assets/floral.jpg'),
-    require('../assets/flower9.jpg'),
 ]
 
 const fonts = [

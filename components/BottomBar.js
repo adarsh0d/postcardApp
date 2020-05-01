@@ -7,7 +7,7 @@ import { indent, } from '../styles/dimensions';
 import { ColorThemeContext } from '../AppContext';
 import { useNavigation } from '@react-navigation/native';
 const BottomBar = () => {
-    const { theme, setFontSize, snapshot,showTitle, showStamp, setShowStamp, setShowTitle } = useContext(ColorThemeContext);
+    const { theme, setFontSize, snapshot, showAddress, setShowAddress, showTitle, showStamp, setShowStamp, setShowTitle } = useContext(ColorThemeContext);
     const { navigate } = useNavigation();
     return (
         <View style={theme.bottomBar}>
@@ -35,19 +35,19 @@ const BottomBar = () => {
                     <MaterialCommunityIcons style={theme.optionIcon} name="border-all-variant" size={indent * 1.8} ></MaterialCommunityIcons>
                     <Text style={theme.optionText}>Border Color</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={theme.option} onPress={() => setFontSize(4)}>
+                <TouchableOpacity style={theme.option} onPress={() => setFontSize(2)}>
                     <MaterialCommunityIcons style={theme.optionIcon} name="format-font-size-increase" size={indent * 1.8} ></MaterialCommunityIcons>
                     <Text style={theme.optionText}>Increase Font Size</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={theme.option} onPress={() => setFontSize(-4)}>
+                <TouchableOpacity style={theme.option} onPress={() => setFontSize(-2)}>
                     <MaterialCommunityIcons style={theme.optionIcon} name="format-font-size-decrease" size={indent * 1.8} ></MaterialCommunityIcons>
                     <Text style={theme.optionText}>Decrease Font Size</Text>
                 </TouchableOpacity>
 
-                <TouchableOpacity style={theme.option} onPress={() => navigate('Stamps')}>
+                {/* <TouchableOpacity style={theme.option} onPress={() => navigate('Stamps')}>
                     <MaterialCommunityIcons style={theme.optionIcon} name="stamper" size={indent * 1.8} ></MaterialCommunityIcons>
                     <Text style={theme.optionText}>Stamps</Text>
-                </TouchableOpacity>
+                </TouchableOpacity> */}
                 <View style={[theme.option, { flexDirection: 'row', alignSelf: 'center' }]}>
                     <Text style={theme.label}>Title</Text>
                     <Switch
@@ -66,6 +66,16 @@ const BottomBar = () => {
                         ios_backgroundColor="#3e3e3e"
                         onValueChange={setShowStamp}
                         value={showStamp}
+                    />
+                </View>
+                <View style={[theme.option, { flexDirection: 'row', alignSelf: 'center' }]}>
+                    <Text style={theme.label}>Address</Text>
+                    <Switch
+                        trackColor={{ false: "#767577", true: "#81b0ff" }}
+                        thumbColor={showAddress ? "#f5dd4b" : "#f4f3f4"}
+                        ios_backgroundColor="#3e3e3e"
+                        onValueChange={setShowAddress}
+                        value={showAddress}
                     />
                 </View>
             </View>

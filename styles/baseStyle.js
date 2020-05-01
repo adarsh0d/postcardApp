@@ -44,6 +44,7 @@ const bottomBar = (fontColor, borderColor) => {
         bottomBar: {
             backgroundColor: 'rgba(255, 255, 255, 0.6)',
             color: colors.white,
+            zIndex: 4
         },
         bottomLeftBar: {
             flexDirection: 'row',
@@ -72,7 +73,7 @@ const bottomBar = (fontColor, borderColor) => {
         },
     }
 };
-const baseStyle = (fontColor = colors.black, borderColor = colors.darkBrown) => {
+const baseStyle = (fontColor = colors.black, borderColor = colors.darkBrown, aspectRatio=16/9) => {
     return {
         container: {
             backgroundColor: colors.white,
@@ -93,7 +94,7 @@ const baseStyle = (fontColor = colors.black, borderColor = colors.darkBrown) => 
             color: fontColor,
             textAlignVertical: 'top',
         },
-        
+
         foreGround: {
             width: '100%',
             height: '100%',
@@ -105,22 +106,21 @@ const baseStyle = (fontColor = colors.black, borderColor = colors.darkBrown) => 
         },
         backGround: {
             elevation: 10,
-            aspectRatio: 16/9
+            width: width,
+            aspectRatio: aspectRatio[0]/aspectRatio[1]
         },
         cardContainer: {
             flex: 1,
             flexDirection: 'row',
             flexWrap: 'wrap',
-            paddingVertical: halfVerticalIndent,
         },
         cardLeft: {
-            flex: 0.5,
+            flex: 1,
             borderRightWidth: 1,
             borderRightColor: borderColor,
-            paddingHorizontal: halfVerticalIndent,
         },
         cardRight: {
-            flex: 0.5,
+            flex: 1,
             paddingHorizontal: halfVerticalIndent,
             paddingVertical: indent
         },
@@ -128,13 +128,14 @@ const baseStyle = (fontColor = colors.black, borderColor = colors.darkBrown) => 
             flexDirection: 'row',
             justifyContent: 'flex-start',
             width: '100%',
+            flex: 0.3
         },
         cardTitle: {
             alignSelf: 'center',
             color: fontColor,
         },
         cardStamp: {
-            alignSelf: 'flex-end',
+            alignSelf: 'center',
             flex: 1,
             alignItems: 'flex-end'
         },
@@ -168,7 +169,7 @@ const baseStyle = (fontColor = colors.black, borderColor = colors.darkBrown) => 
             marginLeft: halfVerticalIndent / 3
         },
         placeholder: {
-            color: fontColor
+            color: 'rgba(0,0,0,0.3)'
         },
 
         stampIcon: {
@@ -233,6 +234,18 @@ const baseStyle = (fontColor = colors.black, borderColor = colors.darkBrown) => 
             alignItems: 'flex-end',
             justifyContent: 'flex-end',
             paddingHorizontal: indent
+        },
+        logo: {
+            width: 'auto',
+            height: 'auto',
+            borderRadius: 50,
+            position: 'absolute',
+            right: 3,
+            bottom: 3,
+            backgroundColor: 'rgba(0,0,0,0.3)',
+            justifyContent: 'center',
+            alignItems: 'center',
+            paddingHorizontal: 10
         },
         ...addressBlock(fontColor, borderColor),
         ...bottomBar(fontColor, borderColor)
