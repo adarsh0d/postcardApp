@@ -32,10 +32,12 @@ const addressBlock = (fontColor, borderColor) => {
         },
         addressBox: {
             borderBottomWidth: 1,
-            borderBottomColor: borderColor,
+            borderBottomColor: borderColor,    
         },
         addressBlock: {
             flex: 1,
+                    
+            paddingHorizontal: halfVerticalIndent
         },
     }
 }
@@ -121,14 +123,14 @@ const baseStyle = (fontColor = colors.black, borderColor = colors.darkBrown, asp
         },
         cardRight: {
             flex: 1,
-            paddingHorizontal: halfVerticalIndent,
             paddingVertical: indent
         },
         cardHeader: {
             flexDirection: 'row',
             justifyContent: 'flex-start',
             width: '100%',
-            flex: 0.3
+            flex: 0.3,
+            paddingHorizontal: halfVerticalIndent
         },
         cardTitle: {
             alignSelf: 'center',
@@ -225,7 +227,7 @@ const baseStyle = (fontColor = colors.black, borderColor = colors.darkBrown, asp
             textAlign: 'center',
             paddingVertical: 5,
             borderWidth: 1,
-            borderColor: borderColor,
+            borderColor: colors.brownDarker,
             paddingHorizontal: halfVerticalIndent
         },
         tabs: {

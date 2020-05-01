@@ -28,7 +28,7 @@ const ImagePanel = ({ foreGround = false, }) => {
         }, {
         pageNo: 1
     })
-    const { theme, setBackgroundImage } = useContext(ColorThemeContext);
+    const { theme, aspectRatio, setBackgroundImage } = useContext(ColorThemeContext);
     const [images, setRemoteImages] = useState([])
     const [searchText, setSearchText] = useState('')
     const search = async (pageNo) => {
@@ -98,7 +98,7 @@ const ImagePanel = ({ foreGround = false, }) => {
             )
         } else if (!item.localUrl) {
             return (
-                <TouchableOpacity onPress={() => setBackgroundImage({ uri: item.src.large })} style={{}}>
+                <TouchableOpacity onPress={() => setBackgroundImage({ uri: JSON.stringify(aspectRatio) == JSON.stringify([16,9]) ?  item.src.landscape : item.src.large })} style={{}}>
                     <Image source={{ uri: item.src.tiny }} imageStyle={{ resizeMode: 'cover' }} style={{ marginHorizontal: halfVerticalIndent / 6, marginBottom: 2, height: imagewidth, width: imagewidth }}>
                     </Image>
                 </TouchableOpacity>

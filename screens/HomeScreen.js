@@ -1,7 +1,8 @@
 import React, { useState, useRef, useEffect, useReducer } from 'react';
 import { ImageBackground, Text, StyleSheet, TextInput, Dimensions, ScrollView, TouchableOpacity, View, AsyncStorage, } from 'react-native';
+import { MaterialCommunityIcons } from '@expo/vector-icons'
 
-import { createStackNavigator } from '@react-navigation/stack';
+import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import { captureRef } from 'react-native-view-shot';
 import * as Sharing from 'expo-sharing';
 import colors from '../styles/colors';
@@ -20,8 +21,9 @@ import { Pallet, BorderPallet } from '../utils/pallet';
 import BorderColors from './BorderColors';
 import FontColors from './FontColors';
 import FontStyles from './FontStyles';
+import { indent, halfVerticalIndent } from '../styles/dimensions';
 const { width, height } = Dimensions.get('window');
-const Stack = createStackNavigator();
+const Stack = createMaterialTopTabNavigator();
 const themesStyleSheets = (fontColor, borderColor, aspectRatio) => {
     return {
         light: StyleSheet.create(baseStyle(fontColor, borderColor, aspectRatio)),
@@ -229,7 +231,7 @@ export default HomeScreen = () => {
         {
             backgroundImage: letterBackgrounds[0].localUrl,
             font: fonts[0],
-            fontSize: moderateScale(25),
+            fontSize: moderateScale(20),
             stampImage: null,
             fontColor: Pallet.flat()[0],
             borderColor: BorderPallet.flat()[0],
@@ -367,12 +369,12 @@ export default HomeScreen = () => {
     }
     const ShareButton = () => {
         return (
-            <View style={[selectedTheme.bottomRightBar, { alignSelf: 'center', marginVertical: 10, justifyContent: 'center', flexDirection: 'row' }]}>
-                <TouchableOpacity onPress={() => { dispatch({ type: 'RESET' }) }} style={selectedTheme.button}>
-                    <Text style={{ fontFamily: 'Curiousness', }}>New</Text>
+            <View style={[selectedTheme.bottomRightBar, { justifyContent: 'flex-end', marginVertical: 10, flexDirection: 'row' }]}>
+                <TouchableOpacity onPress={() => { dispatch({ type: 'RESET' }) }}>
+                    <MaterialCommunityIcons name="plus" size={indent * 1.8} ></MaterialCommunityIcons>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={snapshot} style={selectedTheme.button}>
-                    <Text style={{ fontFamily: 'Curiousness', }}>Share</Text>
+                <TouchableOpacity onPress={snapshot} style={{marginLeft: 5}}>
+                    <MaterialCommunityIcons name="share" size={indent * 1.8} ></MaterialCommunityIcons>
                 </TouchableOpacity>
 
             </View>
@@ -383,6 +385,18 @@ export default HomeScreen = () => {
 
             <View style={selectedTheme.container}>
                 <View style={selectedTheme.backgroundContainer}>
+
+                    <View style={{ flexDirection: 'row', paddingHorizontal: 10, }}>
+                        <View style={{ alignSelf: 'center', flexDirection: 'row', flex: 1 }}>
+                            <TouchableOpacity onPress={() => homepageContext.setFontSize(2)}>
+                                <MaterialCommunityIcons name="format-font-size-increase" size={indent * 1.8} ></MaterialCommunityIcons>
+                            </TouchableOpacity>
+                            <TouchableOpacity onPress={() => homepageContext.setFontSize(-2)}>
+                                <MaterialCommunityIcons name="format-font-size-decrease" size={indent * 1.8} ></MaterialCommunityIcons>
+                            </TouchableOpacity>
+                        </View>
+                        <ShareButton></ShareButton>
+                    </View>
                     <ImageBackground ref={printRef} source={state.backgroundImage} imageStyle={{ resizeMode: 'cover' }} style={[selectedTheme.backGround, { backgroundColor: state.backgroundColor }]}>
                         <View style={[selectedTheme.cardContainer, { backgroundColor: `rgba(0, 0, 0, ${state.alpha})` }]}>
                             <View style={selectedTheme.cardLeft}>
@@ -429,51 +443,76 @@ export default HomeScreen = () => {
                                 }], fontFamily: 'sans-serif-medium', textAlign: 'center', width: '100%', fontSize: 12, color: '#fff'
                             }}>CHITTHI</Text></View>
                     </ImageBackground>
+
                 </View>
 
 
-                <Stack.Navigator>
-                    <Stack.Screen name="Actions" component={BottomBar} options={{
+                <Stack.Navigator
+                    tabBarOptions={{
+                        showIcon: true,
+                        showTitle: false,
+                        iconStyle: { height: 0 }
+                    }}
+                >
 
-                        headerRight: () => (
-                            <ShareButton></ShareButton>
-                        ),
-                    }} />
-                    <Stack.Screen name="Fonts" component={FontStyles} options={{
-                        headerRight: () => (
-                            <ShareButton></ShareButton>
-                        )
-                    }} />
+                    <Stack.Screen name="Fonts" component={FontStyles}
+                        tabBarOptions={{
+                            showIcon: true,
+                        }}
+                        options={({ route }) => ({
+                            tabBarIcon: ({ focused, color, size }) => {
+                                // You can return any component that you like here!
+                                return <MaterialCommunityIcons name="format-text" size={indent * 1.5} ></MaterialCommunityIcons>;
+                            },
+                            tabBarLabel: ''
+                        })} />
                     <Stack.Screen name="Background" component={BackgroundScreen}
-                        initialParams={{ pallet: Pallet }} options={{
-                            headerRight: () => (
-                                <ShareButton></ShareButton>
-                            )
+
+                        initialParams={{ pallet: Pallet }}
+                        options={{
+                            tabBarIcon: () => { return (<MaterialCommunityIcons name="image-area" size={indent * 1.5} ></MaterialCommunityIcons>) },
+
+                            tabBarLabel: ''
+
+                        }} tabBarOptions={{
+                            showIcon: true
                         }} />
+                    <Stack.Screen name="Stamps" component={IconsPanel} options={({ route }) => ({
+                        tabBarIcon: ({ focused, color, size }) => {
+                            // You can return any component that you like here!
+                            return <MaterialCommunityIcons name="stamper" size={indent * 1.5} ></MaterialCommunityIcons>;
+                        },
+                        tabBarLabel: ''
+                    })}
+                    />
                     <Stack.Screen name="Font Color" component={FontColors}
-                        initialParams={{ pallet: Pallet }} options={{
-                            headerRight: () => (
-                                <ShareButton></ShareButton>
-                            )
+                        initialParams={{ pallet: Pallet }}
+                        options={{
+                            tabBarIcon: () => { return (<MaterialCommunityIcons name="palette" size={indent * 1.5} ></MaterialCommunityIcons>) },
+                            tabBarLabel: ''
+                        }} tabBarOptions={{
+                            showIcon: true
                         }}
                     />
-                    <Stack.Screen name="Border Color" component={BorderColors} options={{
-                        headerRight: () => (
-                            <ShareButton></ShareButton>
-                        )
-                    }}
+                    <Stack.Screen name="Border Color" component={BorderColors}
                         initialParams={{ pallet: BorderPallet }} options={{
-                            headerRight: () => (
-                                <ShareButton></ShareButton>
-                            )
+                            tabBarIcon: () => { return (<MaterialCommunityIcons name="border-all-variant" size={indent * 1.5} ></MaterialCommunityIcons>) },
+                            tabBarLabel: ''
+                        }} tabBarOptions={{
+                            showIcon: true
                         }}
                     />
-                    {/* <Stack.Screen name="Stamps" component={IconsPanel} options={{
-                        headerRight: () => (
-                            <ShareButton></ShareButton>
-                        )
+                    <Stack.Screen name="Actions" component={BottomBar} tabBarOptions={{
+                        showIcon: true,
                     }}
-                    /> */}
+                        options={({ route }) => ({
+                            tabBarIcon: ({ focused, color, size }) => {
+                                // You can return any component that you like here!
+                                return <MaterialCommunityIcons name="settings" size={indent * 1.5} ></MaterialCommunityIcons>;
+                            },
+                            tabBarLabel: ''
+                        })} />
+
                 </Stack.Navigator>
 
             </View>

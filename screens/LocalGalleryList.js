@@ -32,12 +32,8 @@ const LocalGalleryList = () => {
                 quality: 1
             });
             if (!result.cancelled) {
-                setBackgroundImage({ uri: result.uri });
-                if (photos.length === 0) {
-                    await AsyncStorage.setItem('savedImages', JSON.stringify([...photos, result.uri]));
-                } else {
-                    await AsyncStorage.setItem('savedImages', JSON.stringify([...photos, result.uri].slice(0, 10)));
-                }
+                setBackgroundImage({ uri: result.uri });              
+                await AsyncStorage.setItem('savedImages', JSON.stringify([...photos, result.uri]));
                 setPhotos((photos) => [...photos, result.uri]);
             }
         }

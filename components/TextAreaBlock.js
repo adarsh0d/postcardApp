@@ -100,7 +100,9 @@ const TextAreaBlock = ({ defaultSide, fontSize = fontSizes.xxmedium, editable = 
     const updateSize = (size) => {
         setHeight(size);
     }
-
+    // useEffect(() => {
+    //     textRef.current.focus();
+    // })
     const {frontText, setFrontText} = useContext(ColorThemeContext);;
     return (
         <KeyboardAvoidingView>

@@ -23,13 +23,15 @@ const ColorsPanel = ({ setSelectedColor, pallet, selectedColor }) => {
         )
     }
     return (
-
+        <View 
+        contentContainerStyle={{justifyContent: 'center', width: '100%', flex: 1}}>
         <FlatList
             data={pallet.flat()}
             renderItem={renderIcon}
             numColumns={6}
             keyExtractor={(item, index) => index}
         ></FlatList>
+        </View>
     )
 }
 export default ColorsPanel

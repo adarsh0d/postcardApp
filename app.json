@@ -31,10 +31,11 @@
       "package": "com.wolfpack.chitthi",
       "config": {
         "googleSignIn": {
-          "apiKey": "AIzaSyClelncT1KN1YKClHhK7npvq4x2TvjSDo0",  
+          "apiKey": "AIzaSyClelncT1KN1YKClHhK7npvq4x2TvjSDo0",
           "certificateHash": "21:0F:FA:C5:A0:B4:91:84:2A:10:71:16:A9:F4:45:E6:9D:95:76:6D"
         }
-      }
+      },      
+      "versionCode": 2
     },
     "ios": {
       "supportsTablet": true
