@@ -17,7 +17,7 @@ const BackgroundScreen = () => {
     return (
         <View style={{ flex: 1 }}>
             <View style={{paddingVertical: halfVerticalIndent}}>
-                <Text style={{ fontFamily: 'Curiousness', fontSize: 12 , paddingHorizontal: verticalIndent}}>Set Background Overlay</Text>
+                <Text style={{ fontFamily: 'Curiousness', fontSize: 12 , paddingHorizontal: verticalIndent}}>Darken Background</Text>
                 <Slider onSlidingComplete={(value) => setBackgroundAlpha(value)} value={alpha} style={{width: '100%', margin: 0, transform: [{ scaleY: 1.5 }]}} thumbTintColor="#000" />
             </View>
             <View style={{ flex: 1 }}>

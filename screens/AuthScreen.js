@@ -16,6 +16,7 @@ const AuthScreen = () => {
             const result = await Google.logInAsync({
                 androidClientId: ANDROID_CLIENT_ID,
                 androidStandaloneAppClientId: "416354194866-vlq6e2sggv4fnsi93qjbed9e32ubundm.apps.googleusercontent.com",
+                iosStandaloneAppClientId: "416354194866-aveppk83q8qvfhs6rbu0oekc0f6cjtqo.apps.googleusercontent.com",
                 scopes: ["profile", "email"]
             });
 

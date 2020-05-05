@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, useReducer } from 'react';
+import React, { useState, useRef, useEffect, useMemo } from 'react';
 import { ImageBackground, Text, StyleSheet, TextInput, Dimensions, ScrollView, TouchableOpacity, View, AsyncStorage, } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 
@@ -16,7 +16,7 @@ import StampArea from '../components/StampsArea';
 import BottomBar from '../components/BottomBar'
 import IconsPanel from '../components/IconsPanel';
 import BackgroundScreen from './BackgroundScreen';
-import { ColorThemeContext } from '../AppContext';
+import { ColorThemeContext, AddressContext, TextAreaContext } from '../AppContext';
 import { Pallet, BorderPallet } from '../utils/pallet';
 import BorderColors from './BorderColors';
 import FontColors from './FontColors';
@@ -257,7 +257,8 @@ export default HomeScreen = () => {
         }
 
     );
-    const [theme, setTheme] = useState(themes[0]);
+
+    const [theme] = useState(themes[0]);
 
 
 
@@ -272,8 +273,29 @@ export default HomeScreen = () => {
         }
     }
     const selectedTheme = themesStyleSheets(state.fontColor, state.borderColor, state.aspectRatio)[theme];
+    const [printInProgress, setPrintInProgress] = useState(false)
+    useEffect(() => {
+        if (printInProgress) {
+            captureRef(printRef, {
+                format: "png",
+                quality: 1,
+                width: width,
+                height: width * (state.aspectRatio[1] / state.aspectRatio[0])
+            }).then(
+                async (uri) => {
+                    setPrintInProgress(false);
+                    const sharingAvailable = await Sharing.isAvailableAsync();
+                    if (sharingAvailable) {
+                        Sharing.shareAsync(uri);
+                        // const savedCards = await AsyncStorage.getItem('cards');
+                        // const savedCardsObj = JSON.parse(savedCards);
+                        // AsyncStorage.setItem('cards', [savedCardsObj, ...state]);
+                    }
+                })
 
-    const homepageContext = React.useMemo(
+        }
+    }, [printInProgress])
+    const homepageContext = useMemo(
         () => ({
             theme: selectedTheme,
             fontColor: state.fontColor,
@@ -286,8 +308,6 @@ export default HomeScreen = () => {
             showStamp: state.showStamp,
             showAddress: state.showAddress,
             aspectRatio: state.aspectRatio,
-            frontText: state.frontText,
-            address: state.address,
             setSize: async data => {
                 dispatch({ type: 'SET_SIZE', payload: data });
             },
@@ -327,12 +347,7 @@ export default HomeScreen = () => {
             setAspectRatio: async data => {
                 dispatch({ type: 'SET_SIZE', payload: data })
             },
-            setFrontText: async data => {
-                dispatch({ type: 'SET_FRONT_TEXT', payload: data })
-            },
-            setAddress: async data => {
-                dispatch({ type: 'SET_ADDRESS', payload: data })
-            }
+
 
 
         }),
@@ -346,26 +361,33 @@ export default HomeScreen = () => {
             state.showStamp,
             state.showAddress,
             state.aspectRatio,
-            state.frontText,
+        ]
+    );
+    const addressContext = useMemo(
+        () => ({
+            address: state.address,
+            setAddress: async data => {
+                dispatch({ type: 'SET_ADDRESS', payload: data })
+            }
+        }),
+        [
             state.address
         ]
     );
+    const textAreaContext = useMemo(
+        () => ({
+            frontText: state.frontText,
+            setFrontText: async data => {
+                dispatch({ type: 'SET_FRONT_TEXT', payload: data })
+            },
+
+        }),
+        [
+            state.frontText,
+        ]
+    );
     const snapshot = async () => {
-        captureRef(printRef, {
-            format: "png",
-            quality: 1,
-            width: width,
-            height: width * (state.aspectRatio[1] / state.aspectRatio[0])
-        }).then(
-            async (uri) => {
-                const sharingAvailable = await Sharing.isAvailableAsync();
-                if (sharingAvailable) {
-                    Sharing.shareAsync(uri);
-                    // const savedCards = await AsyncStorage.getItem('cards');
-                    // const savedCardsObj = JSON.parse(savedCards);
-                    // AsyncStorage.setItem('cards', [savedCardsObj, ...state]);
-                }
-            })
+        setPrintInProgress(!printInProgress);
     }
     const ShareButton = () => {
         return (
@@ -373,13 +395,14 @@ export default HomeScreen = () => {
                 <TouchableOpacity onPress={() => { dispatch({ type: 'RESET' }) }}>
                     <MaterialCommunityIcons name="plus" size={indent * 1.8} ></MaterialCommunityIcons>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={snapshot} style={{marginLeft: 5}}>
+                <TouchableOpacity onPress={snapshot} style={{ marginLeft: 5 }}>
                     <MaterialCommunityIcons name="share" size={indent * 1.8} ></MaterialCommunityIcons>
                 </TouchableOpacity>
 
             </View>
         )
     }
+
     return (
         <ColorThemeContext.Provider value={homepageContext}>
 
@@ -400,7 +423,16 @@ export default HomeScreen = () => {
                     <ImageBackground ref={printRef} source={state.backgroundImage} imageStyle={{ resizeMode: 'cover' }} style={[selectedTheme.backGround, { backgroundColor: state.backgroundColor }]}>
                         <View style={[selectedTheme.cardContainer, { backgroundColor: `rgba(0, 0, 0, ${state.alpha})` }]}>
                             <View style={selectedTheme.cardLeft}>
-                                <TextAreaBlock theme={selectedTheme} fontSize={state.fontSize} font={state.font} setSideBlock={(val) => turnSide(val)}></TextAreaBlock>
+                                <TextAreaContext.Provider value={textAreaContext}>
+                                    {!printInProgress ? (
+                                        <TextAreaBlock theme={selectedTheme} fontSize={state.fontSize} font={state.font} setSideBlock={(val) => turnSide(val)}></TextAreaBlock>
+                                    ) : (
+                                            <View style={selectedTheme.messageAreaFront}>
+                                                <Text style={[selectedTheme.textArea, { fontFamily: state.font, fontSize: state.fontSize }]} >
+                                                    {state.frontText}
+                                                </Text>
+                                            </View>)}
+                                </TextAreaContext.Provider>
                             </View>
                             {(state.showAddress || state.showTitle || state.showStamp) && (
                                 <View style={selectedTheme.cardRight}>
@@ -408,12 +440,11 @@ export default HomeScreen = () => {
                                         {state.showTitle && (
                                             <View style={selectedTheme.cardTitle}>
                                                 {theme === 'light' && (
-                                                    <TextInput
-                                                        disableFullscreenUI={true}
+                                                    <Text
                                                         style={[selectedTheme.cardText]}
-                                                        defaultValue="POST-CARD"
-                                                        underlineColorAndroid="transparent"
-                                                    />
+                                                    >
+                                                        POST-CARD
+                                                    </Text>
                                                 )}
                                                 <Text style={selectedTheme.extraBorder}></Text>
                                             </View>
@@ -425,10 +456,13 @@ export default HomeScreen = () => {
                                         )}
                                     </View>
                                     {state.showAddress && (
+                                        <AddressContext.Provider value={addressContext}>
 
-                                        <View style={selectedTheme.addressBlock}>
-                                            <AddressBlock theme={selectedTheme} editable={true} setParentAddress={(val) => setAddress(val)} font={state.font}></AddressBlock>
-                                        </View>
+                                            <View style={selectedTheme.addressBlock}>
+                                                <AddressBlock theme={selectedTheme} editable={true} setParentAddress={(val) => setAddress(val)} font={state.font}></AddressBlock>
+                                            </View>
+
+                                        </AddressContext.Provider>
                                     )}
                                 </View>
                             )}

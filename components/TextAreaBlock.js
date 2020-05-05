@@ -7,7 +7,7 @@ import {
 } from 'react-native';
 import fontSizes from '../styles/fontSizes';
 import { PanGestureHandler, State } from 'react-native-gesture-handler';
-import { ColorThemeContext } from '../AppContext';
+import { TextAreaContext } from '../AppContext';
 let dropzoneHeight = 200;
 let itemHeight = 100;
 
@@ -103,7 +103,7 @@ const TextAreaBlock = ({ defaultSide, fontSize = fontSizes.xxmedium, editable = 
     // useEffect(() => {
     //     textRef.current.focus();
     // })
-    const {frontText, setFrontText} = useContext(ColorThemeContext);;
+    const {frontText, setFrontText} = useContext(TextAreaContext);;
     return (
         <KeyboardAvoidingView>
             {showButtons && (

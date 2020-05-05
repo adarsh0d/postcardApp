@@ -1,6 +1,6 @@
 
 import React, {useRef, useState, useContext} from 'react';
-import { ColorThemeContext } from '../AppContext'
+import { AddressContext } from '../AppContext'
 import { TextInput, View, } from 'react-native';
 const AddressBlock = ({ font, theme, editable = true, disableFullscreenUI = true }) => {    
     const refs = {
@@ -14,7 +14,7 @@ const AddressBlock = ({ font, theme, editable = true, disableFullscreenUI = true
         pin5: useRef(null),
         pin6: useRef(null)
     }
-    const { address, setAddress } = useContext(ColorThemeContext); 
+    const { address, setAddress } = useContext(AddressContext); 
    
     return (
         <View>

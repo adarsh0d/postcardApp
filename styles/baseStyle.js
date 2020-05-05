@@ -22,7 +22,7 @@ const addressBlock = (fontColor, borderColor) => {
             width: verticalIndent,
             textAlign: 'center',
             fontSize: fontSizes.verySmall,
-            color: fontColor
+            color: fontColor,
         },
         addressBoxInput: {
             borderStyle: 'dotted',
