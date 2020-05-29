@@ -112,7 +112,7 @@ const themesStyleSheets = (fontColor, borderColor, aspectRatio) => {
 };
 
 const themes = ['light', 'dark'];
-export default HomeScreen = () => {
+const HomeScreen = () => {
     // useEffect(() => {
     //     async () => {
     //         const items = await AsyncStorage.getItem('cards');
@@ -555,3 +555,4 @@ export default HomeScreen = () => {
     )
 
 };
+export default HomeScreen;
